@@ -1,5 +1,5 @@
 // logic helper functions
-import { apiFetchValidEvolutions } from "./gameApi.js";
+import { apiFetchValidEvolutions, apiSendToPlayArea, apiSendToHand } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // must be a Pokemon card
@@ -13,7 +13,7 @@ function allowedToBeInEmptySpot(card) {
 
 export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
   fetch(
-    `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`
+    `https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net//game/getnewgame/${deckNumber}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -54,10 +54,7 @@ export async function placeCardInSpot({
       card.attachedCards = [];
       card.damageCounters = 0;
       setHand([...hand, ...attached, card]);
-      if (bench.includes(card))
-        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (active && active.numberInDeck == card.numberInDeck)
-        setActive(null);
+      apiSendToHand(gameGuid, card, active, setActive, bench, setBench);
       break;
 
     case 0:
@@ -71,8 +68,9 @@ export async function placeCardInSpot({
         setActive(card);
       }
       // remove from wherever it came from
-      if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+      if (hand.includes(card)) {
+        apiSendToPlayArea(gameGuid, card, hand, setHand);
+      }
       else if (bench.includes(card))
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
@@ -92,8 +90,9 @@ export async function placeCardInSpot({
         setBench([...bench, card]);
       }
       // remove from wherever it came from
-      if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+      if (hand.includes(card)) {
+        apiSendToPlayArea(gameGuid, card, hand, setHand);
+      }
       else if (active && active.numberInDeck == card.numberInDeck)
         setActive(null);
       else if (bench.includes(card)) setBench([...new Set(bench)]);

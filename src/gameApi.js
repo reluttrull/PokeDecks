@@ -1,5 +1,5 @@
 // api helper functions
-const BASE = "https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game";
+const BASE = "https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/game";
 
 export const apiReturnToDeck = (card, gameGuid) =>
   fetch(`${BASE}/placecardonbottomofdeck/${gameGuid.current}`, {
@@ -57,6 +57,30 @@ export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, 
       card.damageCounters = 0;
       setHand([...hand, card]);
       setCardsInDeck(cardsInDeck.filter((c) => c.numberInDeck != card.numberInDeck));
+    }
+  });
+
+export const apiSendToPlayArea = (gameGuid, card, hand, setHand) =>
+  fetch(`${BASE}/sendtoplayarea/${gameGuid.current}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
+  }).then((response) => {
+    if (response.status == 204) {
+      setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+    }
+  });
+
+export const apiSendToHand = (gameGuid, card, active, setActive, bench, setBench) =>
+  fetch(`${BASE}/sendtohand/${gameGuid.current}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
+  }).then((response) => {
+    if (response.status == 204) {
+      if (active && active.numberInDeck == card.numberInDeck) setActive(null);
+      else if (bench.includes(card)) 
+        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
     }
   });
 

@@ -1,6 +1,7 @@
 // Game.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
+import * as signalR from "@microsoft/signalr";
 import confirm from './ConfirmationDialog.jsx';
 import PlayArea from "./PlayArea.jsx";
 import CoinFlip from "./CoinFlip.jsx";
@@ -109,6 +110,35 @@ const Game = ({ deckNumber, gameStateCallback }) => {
   useEffect(() => {
     initializeGame(deckNumber, gameGuid, setHand, mulligans);
   }, []);
+
+  useEffect(() => {
+    if (!gameGuid.current) return;
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
+      .withAutomaticReconnect()
+      .build();
+
+    // receive messages from server
+    connection.on("CardAddedToPlayArea", (message) => {
+      console.log("Message from SignalR hub: card moved to play area", message);
+    });
+    connection.on("CardReturnedToHand", (message) => {
+      console.log("Message from SignalR hub: card returned to hand", message);
+    });
+
+    // start connection
+    connection.start()
+      .then(() => {
+        connection.invoke("JoinGameGroup", gameGuid.current);
+        console.log("Connected to SignalR hub");
+      })
+      .catch((err) => console.error("Connection failed: ", err));
+
+    return () => {
+      connection.stop();
+    };
+  }, [gameGuid.current]);
 
   return (
     <>

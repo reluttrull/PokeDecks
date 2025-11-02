@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/signalr": "^9.0.6",
     "react": "^19.1.1",
     "react-confirm": "^0.5.0-1",
     "react-dom": "^19.2.0",
