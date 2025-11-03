@@ -11,7 +11,7 @@ function allowedToBeInEmptySpot(card) {
   return false;
 }
 
-export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
+export function initializeGame(deckNumber, gameGuid) { //setHand, mulligans) {
   fetch(
     `https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net//game/getnewgame/${deckNumber}`
   )
@@ -19,15 +19,15 @@ export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
     .then((data) => {
       if (!data) throw "Game data empty!";
       if (data.gameGuid) gameGuid.current = data.gameGuid;
-      if (data.hand) {
-        const expandedHand = data.hand.map((card) => ({
-          ...card,
-          attachedCards: [],
-          damageCounters: 0,
-        }));
-        setHand(expandedHand);
-      }
-      if (data.mulligans) mulligans.current = data.mulligans;
+      // if (data.hand) {
+      //   const expandedHand = data.hand.map((card) => ({
+      //     ...card,
+      //     attachedCards: [],
+      //     damageCounters: 0,
+      //   }));
+      //   setHand(expandedHand);
+      // }
+      // if (data.mulligans) mulligans.current = data.mulligans;
     })
     .catch((err) => console.error("Error fetching game start:", err));
 }
@@ -57,12 +57,13 @@ export async function placeCardInSpot({
       if (active && active.numberInDeck == card.numberInDeck) setActive(null);
       else if (bench.includes(card)) 
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      apiSendToHand(gameGuid, card, active, setActive, bench, setBench);
+      attached.forEach(c => apiSendToHand(gameGuid, c));
+      apiSendToHand(gameGuid, card);
       break;
 
     case 0:
       if (active) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(card, true);
+        let attachedOk = await attachOrSwapCard(gameGuid, card, true);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card)) {
@@ -73,7 +74,7 @@ export async function placeCardInSpot({
       // remove from wherever it came from
       if (hand.includes(card)) {
         setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        apiSendToPlayArea(gameGuid, card, hand, setHand);
+        apiSendToPlayArea(gameGuid, card);
       }
       else if (bench.includes(card))
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
@@ -86,7 +87,7 @@ export async function placeCardInSpot({
     case 5:
       const idx = spot - 1;
       if (bench.length > idx && bench[idx]) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(card, false, idx);
+        let attachedOk = await attachOrSwapCard(gameGuid, card, false, idx);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card))
@@ -96,7 +97,7 @@ export async function placeCardInSpot({
       // remove from wherever it came from
       if (hand.includes(card)) {
         setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        apiSendToPlayArea(gameGuid, card, hand, setHand);
+        apiSendToPlayArea(gameGuid, card);
       }
       else if (active && active.numberInDeck == card.numberInDeck)
         setActive(null);
@@ -145,6 +146,7 @@ function shouldAttachAsEnergy(baseCard, cardToAttach) {
 }
 
 export async function attachOrSwapCard(
+  gameGuid,
   cardToAttach,
   isActive,
   benchPosition = -1,
@@ -153,6 +155,7 @@ export async function attachOrSwapCard(
 ) {
   const { hand, active, bench, discard } = state;
   const { setHand, setActive, setBench, setDiscard } = setState;
+  let guid = !gameGuid ? gameGuid.current : gameGuid;
 
   // handle Pokémon Breeder evolution shortcut
   if (cardToAttach.name == "Pokémon Breeder") {
@@ -184,6 +187,7 @@ export async function attachOrSwapCard(
       );
       setBench(newBench);
     }
+    apiSendToPlayArea(guid, stageTwo);
 
     // remove stage two and trainer card from hand...
     setHand(
