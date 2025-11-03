@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import CoinFlip from './CoinFlip.jsx';
 import Game from './Game.jsx';
 import './App.css';
@@ -46,7 +47,7 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <BrowserRouter>
       {!gameStarted && 
         <div style={{textAlign:'left'}}>
           {deckBriefs && deckBriefs.map(brief => 
@@ -61,7 +62,7 @@ const App = () => {
       {coinResult != null && !gameStarted && <CoinFlip isHeads={coinResult} />}
       {gameStarted && !gameEnded && <Game deckNumber={deckNum} gameStateCallback={gameStateCallback} />}
       {gameEnded && <h1>Game over</h1>}
-    </>
+    </BrowserRouter>
   );
 };
 

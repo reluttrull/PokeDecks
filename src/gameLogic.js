@@ -54,6 +54,9 @@ export async function placeCardInSpot({
       card.attachedCards = [];
       card.damageCounters = 0;
       setHand([...hand, ...attached, card]);
+      if (active && active.numberInDeck == card.numberInDeck) setActive(null);
+      else if (bench.includes(card)) 
+        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
       apiSendToHand(gameGuid, card, active, setActive, bench, setBench);
       break;
 
@@ -69,6 +72,7 @@ export async function placeCardInSpot({
       }
       // remove from wherever it came from
       if (hand.includes(card)) {
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
         apiSendToPlayArea(gameGuid, card, hand, setHand);
       }
       else if (bench.includes(card))
@@ -91,6 +95,7 @@ export async function placeCardInSpot({
       }
       // remove from wherever it came from
       if (hand.includes(card)) {
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
         apiSendToPlayArea(gameGuid, card, hand, setHand);
       }
       else if (active && active.numberInDeck == card.numberInDeck)
