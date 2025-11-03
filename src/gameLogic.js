@@ -1,5 +1,5 @@
 // logic helper functions
-import { apiFetchValidEvolutions } from "./gameApi.js";
+import { apiFetchValidEvolutions, apiSendToHand } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // must be a Pokemon card
@@ -11,23 +11,15 @@ function allowedToBeInEmptySpot(card) {
   return false;
 }
 
-export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
+export function initializeGame(deckNumber, gameGuid) { //setHand, mulligans) {
   fetch(
-    `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`
+    `https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net//game/getnewgame/${deckNumber}`
   )
     .then((response) => response.json())
     .then((data) => {
       if (!data) throw "Game data empty!";
       if (data.gameGuid) gameGuid.current = data.gameGuid;
-      if (data.hand) {
-        const expandedHand = data.hand.map((card) => ({
-          ...card,
-          attachedCards: [],
-          damageCounters: 0,
-        }));
-        setHand(expandedHand);
-      }
-      if (data.mulligans) mulligans.current = data.mulligans;
+      // TODO: display mulligans
     })
     .catch((err) => console.error("Error fetching game start:", err));
 }
@@ -35,6 +27,7 @@ export function initializeGame(deckNumber, gameGuid, setHand, mulligans) {
 export async function placeCardInSpot({
   card,
   spot,
+  isPublicCaller,
   state,
   setState,
   helpers,
@@ -45,24 +38,36 @@ export async function placeCardInSpot({
   const { attachOrSwapCard, apiReturnToDeck } = helpers;
 
   switch (spot) {
-    case -1:
-      if (hand.includes(card)) break;
-      const attached = card.attachedCards.map((c) => ({
-        ...c,
-        damageCounters: 0,
-      }));
+    case -2: // real hand: dropped in public bottom zone
+      if (card.attachedCards.length > 0) {
+        const handattached = card.attachedCards.map((c) => ({
+          ...c,
+          damageCounters: 0,
+        }));
+        handattached.forEach(c => apiSendToHand(gameGuid, c));
+      }
       card.attachedCards = [];
       card.damageCounters = 0;
-      setHand([...hand, ...attached, card]);
-      if (bench.includes(card))
+      if (hand.includes(card)) 
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck)); // remove from temp hand
+      else if (active && active.numberInDeck == card.numberInDeck) setActive(null);
+      else if (bench.includes(card)) 
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (active && active.numberInDeck == card.numberInDeck)
-        setActive(null);
+      else if (bench.includes(card)) 
+        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
+      apiSendToHand(gameGuid, card);
       break;
-
+    case -1: // temp hand: dropped in private top zone
+      console.log(isPublicCaller, hand, card);
+      if (!isPublicCaller && hand.includes(card)) { // real hand includes
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        card.attachedCards = [];
+        card.damageCounters = 0;
+      }
+      break;
     case 0:
       if (active) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(card, true);
+        let attachedOk = await attachOrSwapCard(gameGuid, card, true);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card)) {
@@ -71,10 +76,10 @@ export async function placeCardInSpot({
         setActive(card);
       }
       // remove from wherever it came from
-      if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (bench.includes(card))
+      if (bench.includes(card))
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
+      else if (hand.includes(card))
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 1:
@@ -84,7 +89,7 @@ export async function placeCardInSpot({
     case 5:
       const idx = spot - 1;
       if (bench.length > idx && bench[idx]) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(card, false, idx);
+        let attachedOk = await attachOrSwapCard(gameGuid, card, false, idx);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card))
@@ -92,11 +97,11 @@ export async function placeCardInSpot({
         setBench([...bench, card]);
       }
       // remove from wherever it came from
-      if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (active && active.numberInDeck == card.numberInDeck)
+      if (active && active.numberInDeck == card.numberInDeck)
         setActive(null);
       else if (bench.includes(card)) setBench([...new Set(bench)]);
+      else if (hand.includes(card))
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 6:
@@ -134,13 +139,13 @@ export function tightenHandLayoutLogic(hand, setHand, setRerenderKey) {
 function shouldAttachAsEnergy(baseCard, cardToAttach) {
   if (cardToAttach.category == "Energy") return true;
   if (baseCard.name != "Voltorb" && cardToAttach.name == "Electrode" && cardToAttach.attachedCards.length > 0) {
-    // get rid of Electrode???
     return true;
   }
   return false;
 }
 
 export async function attachOrSwapCard(
+  gameGuid,
   cardToAttach,
   isActive,
   benchPosition = -1,
@@ -149,6 +154,7 @@ export async function attachOrSwapCard(
 ) {
   const { hand, active, bench, discard } = state;
   const { setHand, setActive, setBench, setDiscard } = setState;
+  let guid = !gameGuid ? gameGuid.current : gameGuid;
 
   // handle Pokémon Breeder evolution shortcut
   if (cardToAttach.name == "Pokémon Breeder") {

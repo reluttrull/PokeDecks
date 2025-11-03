@@ -1,15 +1,14 @@
-// Game.jsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
-import confirm from './ConfirmationDialog.jsx';
-import PlayArea from "./PlayArea.jsx";
+import * as signalR from "@microsoft/signalr";
+import PublicPlayArea from "./PublicPlayArea.jsx";
 import CoinFlip from "./CoinFlip.jsx";
 import Loading from "./Loading.jsx";
+import QRWrapper from "./QRWrapper.jsx";
 import {
-  initializeGame,
   placeCardInSpot,
   attachOrSwapCard,
-  tightenHandLayoutLogic,
 } from "./gameLogic.js";
 import {
   apiReturnToDeck,
@@ -20,16 +19,15 @@ import {
   apiShuffleDeck,
   apiFetchCardsFromDeck,
   apiDrawSpecificCard,
+  apiSendToHand
 } from "./gameApi.js";
 import "./App.css";
 
-const Game = ({ deckNumber, gameStateCallback }) => {
+const Public = () => {
+  const { gameGuid } = useParams();
+  const navigate = useNavigate();
   Modal.setAppElement("#root");
-
-  // State
-  const gameGuid = useRef(null);
-  const mulligans = useRef(0);
-  const [hand, setHand] = useState([]);
+  const [temphand, setTemphand] = useState([]);
   const [active, setActive] = useState(null);
   const [bench, setBench] = useState([]);
   const [discard, setDiscard] = useState([]);
@@ -40,27 +38,33 @@ const Game = ({ deckNumber, gameStateCallback }) => {
   const [cardsInDeck, setCardsInDeck] = useState([]);
   const [numberInDeck, setNumberInDeck] = useState(47);
   const [rerenderKey, setRerenderKey] = useState(0);
-
+  const [loadingDone, setLoadingDone] = useState(false);
+  
   const cardCallback = (data) => {
+    if (data.pos == -1) return;
     placeCardInSpot({
-      card: data.card,
-      spot: data.pos,
-      state: { hand, active, bench, discard },
-      setState: { setHand, setActive, setBench, setDiscard },
-      helpers: {
-        attachOrSwapCard: (card, isActive, benchPos) =>
-          attachOrSwapCard(card, isActive, benchPos, { hand, active, bench, discard }, { setHand, setActive, setBench, setDiscard }),
+    card: data.card,
+    spot: data.pos,
+    isPublicCaller: true,
+    state: { hand: temphand, active, bench, discard },
+    setState: { setHand: setTemphand, setActive, setBench, setDiscard },
+    helpers: {
+        attachOrSwapCard: (gameGuid, card, isActive, benchPos) =>
+        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench, discard }, { setHand: setTemphand, setActive, setBench, setDiscard }),
         apiReturnToDeck,
-      },
-      gameGuid,
+    },
+    gameGuid,
     });
   };
-
+    
   // api handlers
   const drawPrize = (prizeNum) =>
-    apiDrawPrize(gameGuid, hand, setHand, setPrizes, prizeNum, gameStateCallback);
-  const drawTopCard = () => apiDrawTopCard(gameGuid, hand, setHand);
-  const endGame = () => apiEndGame(gameGuid, gameStateCallback);
+    apiDrawPrize(gameGuid, setPrizes, prizeNum, function() {});
+  const drawTopCard = () => apiDrawTopCard(gameGuid);
+  const endGame = () => {
+    apiEndGame(gameGuid, function() {});
+    navigate("/pokeclient/gameover");
+  };
   const getCoinFlip = () => apiFlipCoin(setCoinResult);
   const closeCoinFlip = () => setCoinResult(null);
   const handleShuffle = () => apiShuffleDeck(gameGuid);
@@ -78,41 +82,55 @@ const Game = ({ deckNumber, gameStateCallback }) => {
   }
   const handleCloseSelectFromDiscard = () => setIsSelectingDiscard(false);
   const addFromDeckToHand = (card) =>
-    apiDrawSpecificCard(gameGuid, card, hand, setHand, cardsInDeck, setCardsInDeck);
+    apiDrawSpecificCard(gameGuid, card, cardsInDeck, setCardsInDeck);
   const addFromDiscardToHand = (card) => {
     card.attachedCards = [];
     card.damageCounters = 0;
-    setHand([...hand, card]);
+    apiSendToHand(gameGuid, card);
     setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
 
-  const tightenHandLayout = () =>
-    tightenHandLayoutLogic(hand, setHand, setRerenderKey);
-
-  // whenever cards move around, make sure we know the correct number of cards remaining in the deck
-  useEffect(() => {
-    let totalAttached = 0;
-    bench.forEach((c) => (totalAttached += c.attachedCards.length));
-    if (active) totalAttached += active.attachedCards.length;
-    setNumberInDeck(
-      60 -
-        hand.length -
-        bench.length -
-        discard.length -
-        prizes.length -
-        (active ? 1 : 0) -
-        totalAttached
-    );
-  }, [hand, active, bench, discard, prizes]);
-
   // on mount
   useEffect(() => {
-    initializeGame(deckNumber, gameGuid, setHand, mulligans);
+    if (!gameGuid) return;
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
+        .withAutomaticReconnect()
+        .build();
+
+    // receive messages from server
+    connection.on("CardAddedToPlayArea", (message) => {
+        console.log("Message from SignalR hub: card moved to play area", message);
+        message.damageCounters = 0;
+        message.attachedCards = [];
+        setTemphand(prevTemphand => [...prevTemphand, message]);
+    });
+    connection.on("CardMovedToHand", (message) => {
+        console.log("Message from SignalR hub: card returned to hand", message);
+    });
+    connection.on("DeckChanged", (message) => {
+        console.log("Message from SignalR hub: number of cards in deck changed", message);
+        setNumberInDeck(message);
+    });
+
+    // start connection
+    connection.start()
+    .then(() => {
+        connection.invoke("JoinGameGroup", gameGuid);
+        console.log("Connected to SignalR hub");
+        setTimeout(() => setLoadingDone(true), 2000);
+    })
+    .catch((err) => console.error("Connection failed: ", err));
+
+    return () => {
+        connection.stop();
+    };
   }, []);
 
   return (
     <>
-      {!gameGuid.current && <Loading />}
+      {!loadingDone && <Loading />}
 
       {isSelectingDeck && (
         <Modal
@@ -156,10 +174,10 @@ const Game = ({ deckNumber, gameStateCallback }) => {
         </Modal>
       )}
 
-      {gameGuid.current && (
+      {loadingDone && (
         <>
-          <PlayArea
-            hand={hand}
+          <PublicPlayArea
+            temphand={temphand}
             bench={bench}
             active={active}
             discard={discard}
@@ -167,13 +185,16 @@ const Game = ({ deckNumber, gameStateCallback }) => {
             numberInDeck={numberInDeck}
             rerenderKey={rerenderKey}
             cardCallback={cardCallback}
-            tightenHandLayout={tightenHandLayout}
             drawPrize={drawPrize}
             handleSelectFromDiscard={handleSelectFromDiscard}
             handleDiscardHand={handleDiscardHand}
             handleSelectFromDeck={handleSelectFromDeck}
             handleShuffle={handleShuffle}
           />
+          <div id="private-qr">
+            <QRWrapper id="private-qr" url={window.location.href.replace('public', 'private')} />
+            {window.location.href.replace('public', 'private')}
+          </div>
           <button id="flip-coin-button" onClick={getCoinFlip}>flip coin</button>
           <button id="draw-card-button" onClick={drawTopCard}>draw</button>
           <button id="end-game-button" onClick={endGame}>end game</button>
@@ -193,4 +214,4 @@ const Game = ({ deckNumber, gameStateCallback }) => {
   );
 };
 
-export default Game;
+export default Public;
