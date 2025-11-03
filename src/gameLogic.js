@@ -45,7 +45,22 @@ export async function placeCardInSpot({
   const { attachOrSwapCard, apiReturnToDeck } = helpers;
 
   switch (spot) {
-    case -1:
+    case -2: // real hand
+      const handattached = card.attachedCards.map((c) => ({
+        ...c,
+        damageCounters: 0,
+      }));
+      card.attachedCards = [];
+      card.damageCounters = 0;
+      if (hand.includes(card)) 
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+      else if (active && active.numberInDeck == card.numberInDeck) setActive(null);
+      else if (bench.includes(card)) 
+        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
+      handattached.forEach(c => apiSendToHand(gameGuid, c));
+      apiSendToHand(gameGuid, card);
+      break;
+    case -1: // temp hand
       if (hand.includes(card)) break;
       const attached = card.attachedCards.map((c) => ({
         ...c,
@@ -57,8 +72,6 @@ export async function placeCardInSpot({
       if (active && active.numberInDeck == card.numberInDeck) setActive(null);
       else if (bench.includes(card)) 
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      attached.forEach(c => apiSendToHand(gameGuid, c));
-      apiSendToHand(gameGuid, card);
       break;
 
     case 0:

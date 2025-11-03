@@ -7,7 +7,7 @@ import Damage from './Damage.jsx';
 import SpecialConditions from './SpecialConditions.jsx';
 import './App.css';
 
-const Card = ({data, startOffset, positionCallback}) => {
+const Card = ({data, startOffset, positionCallback, isPublic}) => {
   const ref = useRef(null);
   const uuid = crypto.randomUUID();
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -25,8 +25,8 @@ const Card = ({data, startOffset, positionCallback}) => {
   let hqurlstring = `${data.image}/high.webp`;
   Modal.setAppElement('#root');
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
-  const targets = [
-    { left: 480, top: 470, position: -1}, // hand
+  const publicTargets = [
+    { left: 480, top: 470, position: -1}, // temphand
     { left: 590, top: 470, position: -1}, // extend hand area right
     { left: 600, top: 115, position: 0 }, // active
     { left: 300, top: 315, position: 1 }, // bench 1
@@ -46,6 +46,22 @@ const Card = ({data, startOffset, positionCallback}) => {
     setIsOpen(false);
   }
 
+  function publicCheckDropBottom(down, movementX, movementY, y) {
+    const bottomZoneTop = 700;
+    if (y >= bottomZoneTop) {
+      setTranslateX(down ? movementX : withSpring(startOffset));
+      setTranslateY(down ? movementY : withSpring(0));
+
+      if (!down) {
+        positionCallback({ card: data, pos: -2 }); // custom position ID
+        setTranslateX(withSpring(startOffset));
+        setTranslateY(withSpring(0));
+      }
+      return true;
+    }
+    return false;
+  }
+
   useDrag(ref, ({ down, movement }) => {
     if (!ref.current) return;
 
@@ -57,10 +73,12 @@ const Card = ({data, startOffset, positionCallback}) => {
     const rect = ref.current.getBoundingClientRect();
     const cardCenterX = (rect.left + rect.width / 2) / scale + scrollX;
     const cardCenterY = (rect.top + rect.height / 2) / scale + scrollY;
+
+    if (isPublic && publicCheckDropBottom(down, movement.x, movement.y, cardCenterY)) return;
     
-    // see if we're on any target locations
-    for (let i = 0; i < targets.length; i++) {
-      let target = targets[i];
+    // see if we're on any public target locations
+    for (let i = 0; i < publicTargets.length; i++) {
+      let target = publicTargets[i];
       if (cardCenterX >= target.left - 55 && cardCenterX <= target.left + 55
           && cardCenterY >= target.top - 81 && cardCenterY <= target.top + 81) {
         setTranslateX(down ? movement.x : withSpring(target.left + 2));
@@ -104,6 +122,7 @@ const Card = ({data, startOffset, positionCallback}) => {
   }
 
   useEffect(() => {
+    console.log(data.attachedCards);
     setAttachedEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.category == "Energy")
           .toSorted((a,b) => a.name - b.name));

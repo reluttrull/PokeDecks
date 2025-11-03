@@ -291,6 +291,16 @@
 	-webkit-transform: rotateX(180deg);
 	transform: rotateX(180deg);
 }
+
+#return-to-hand-zone {
+  position: absolute;
+  top: 700px;
+  left: 250px;
+  width: 720px;
+  height: 165px;
+  background-color: #646cff96;
+}
+
 @-webkit-keyframes spin-tails {
 	0% {
 		-webkit-transform: rotateX(0);

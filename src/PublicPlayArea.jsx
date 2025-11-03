@@ -1,6 +1,6 @@
 // PublicPlayArea.jsx
 import React from 'react';
-import Card from './Card.jsx';
+import PublicCard from './PublicCard.jsx';
 import StaticCard from './StaticCard.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import Deck from './Deck.jsx';
@@ -21,13 +21,13 @@ const PublicPlayArea = ({
 
       {/* Active */}
       <div id="user-active" className="card-target">
-        {active && <Card key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
+        {active && <PublicCard key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
       </div>
 
       {/* Bench */}
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} id={`user-bench-${i + 1}`} className="card-target">
-          {bench.length > i && <Card key={bench[i].numberInDeck} data={bench[i]} startOffset={0} positionCallback={cardCallback} />}
+          {bench.length > i && <PublicCard key={bench[i].numberInDeck} data={bench[i]} startOffset={0} positionCallback={cardCallback} />}
         </div>
       ))}
 
@@ -54,7 +54,7 @@ const PublicPlayArea = ({
       {/* Temp Hand */}
       <div id="hand-area" className="card-target">
         {temphand.map((card, index) => (
-          <Card
+          <PublicCard
             key={`${card.numberInDeck}-${rerenderKey}`}
             data={card}
             startOffset={index * 30}
@@ -62,6 +62,7 @@ const PublicPlayArea = ({
           />
         ))}
       </div>
+      <div id="return-to-hand-zone">return to hand</div>
     </div>
   );
 };

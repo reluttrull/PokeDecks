@@ -40,20 +40,20 @@ const Public = () => {
   const [rerenderKey, setRerenderKey] = useState(0);
   const [loadingDone, setLoadingDone] = useState(false);
   
-    const cardCallback = (data) => {
-      placeCardInSpot({
-        card: data.card,
-        spot: data.pos,
-        state: { hand: temphand, active, bench, discard },
-        setState: { setHand: setTemphand, setActive, setBench, setDiscard },
-        helpers: {
-          attachOrSwapCard: (gameGuid, card, isActive, benchPos) =>
-            attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench, discard }, { setHand: setTemphand, setActive, setBench, setDiscard }),
-          apiReturnToDeck,
-        },
-        gameGuid,
-      });
-    };
+  const cardCallback = (data) => {
+    placeCardInSpot({
+    card: data.card,
+    spot: data.pos,
+    state: { hand: temphand, active, bench, discard },
+    setState: { setHand: setTemphand, setActive, setBench, setDiscard },
+    helpers: {
+        attachOrSwapCard: (gameGuid, card, isActive, benchPos) =>
+        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench, discard }, { setHand: setTemphand, setActive, setBench, setDiscard }),
+        apiReturnToDeck,
+    },
+    gameGuid,
+    });
+  };
     
   // api handlers
   const drawPrize = (prizeNum) =>
