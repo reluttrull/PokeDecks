@@ -35,6 +35,7 @@ export function initializeGame(deckNumber, gameGuid) { //setHand, mulligans) {
 export async function placeCardInSpot({
   card,
   spot,
+  isPublicCaller,
   state,
   setState,
   helpers,
@@ -45,35 +46,33 @@ export async function placeCardInSpot({
   const { attachOrSwapCard, apiReturnToDeck } = helpers;
 
   switch (spot) {
-    case -2: // real hand
-      const handattached = card.attachedCards.map((c) => ({
-        ...c,
-        damageCounters: 0,
-      }));
+    case -2: // real hand: dropped in public bottom zone
+      if (card.attachedCards.length > 0) {
+        const handattached = card.attachedCards.map((c) => ({
+          ...c,
+          damageCounters: 0,
+        }));
+        handattached.forEach(c => apiSendToHand(gameGuid, c));
+      }
       card.attachedCards = [];
       card.damageCounters = 0;
       if (hand.includes(card)) 
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck)); // remove from temp hand
       else if (active && active.numberInDeck == card.numberInDeck) setActive(null);
       else if (bench.includes(card)) 
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      handattached.forEach(c => apiSendToHand(gameGuid, c));
-      apiSendToHand(gameGuid, card);
-      break;
-    case -1: // temp hand
-      if (hand.includes(card)) break;
-      const attached = card.attachedCards.map((c) => ({
-        ...c,
-        damageCounters: 0,
-      }));
-      card.attachedCards = [];
-      card.damageCounters = 0;
-      setHand([...hand, ...attached, card]);
-      if (active && active.numberInDeck == card.numberInDeck) setActive(null);
       else if (bench.includes(card)) 
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
+      apiSendToHand(gameGuid, card);
       break;
-
+    case -1: // temp hand: dropped in private top zone
+      console.log(isPublicCaller, hand, card);
+      if (!isPublicCaller && hand.includes(card)) { // real hand includes
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
+        card.attachedCards = [];
+        card.damageCounters = 0;
+      }
+      break;
     case 0:
       if (active) { // placed in occupied spot, try to attach or swap
         let attachedOk = await attachOrSwapCard(gameGuid, card, true);
@@ -85,12 +84,10 @@ export async function placeCardInSpot({
         setActive(card);
       }
       // remove from wherever it came from
-      if (hand.includes(card)) {
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        apiSendToPlayArea(gameGuid, card);
-      }
-      else if (bench.includes(card))
+      if (bench.includes(card))
         setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
+      else if (hand.includes(card))
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 1:
@@ -108,13 +105,11 @@ export async function placeCardInSpot({
         setBench([...bench, card]);
       }
       // remove from wherever it came from
-      if (hand.includes(card)) {
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
-        apiSendToPlayArea(gameGuid, card);
-      }
-      else if (active && active.numberInDeck == card.numberInDeck)
+      if (active && active.numberInDeck == card.numberInDeck)
         setActive(null);
       else if (bench.includes(card)) setBench([...new Set(bench)]);
+      else if (hand.includes(card))
+        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 6:
@@ -200,7 +195,6 @@ export async function attachOrSwapCard(
       );
       setBench(newBench);
     }
-    apiSendToPlayArea(guid, stageTwo);
 
     // remove stage two and trainer card from hand...
     setHand(

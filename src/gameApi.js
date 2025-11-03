@@ -55,6 +55,7 @@ export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, 
     if (response.status == 204) {
       card.attachedCards = [];
       card.damageCounters = 0;
+      console.log(card);
       setHand([...hand, card]);
       setCardsInDeck(cardsInDeck.filter((c) => c.numberInDeck != card.numberInDeck));
     }

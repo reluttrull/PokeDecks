@@ -13,11 +13,8 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [translateX, setTranslateX] = useValue(startOffset);
   const [translateY, setTranslateY] = useValue(0);
-  const [attachedEnergy, setAttachedEnergy] = useState(data.attachedCards
-          .filter((attachedCard) => attachedCard.category == "Energy")
-          .toSorted((a,b) => a.name - b.name));
-  const [mockEnergy, setMockEnergy] = useState(data.attachedCards
-          .filter((attachedCard) => attachedCard.name == "Electrode"));
+  const [attachedEnergy, setAttachedEnergy] = useState([]);
+  const [mockEnergy, setMockEnergy] = useState([]);
   const [rerenderEnergyKey, setRerenderEnergyKey] = useState(0);
   const [rerenderDmgKey, setRerenderDmgKey] = useState(0);
 
@@ -46,6 +43,22 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
     setIsOpen(false);
   }
 
+  function privateCheckDropTop(down, movementX, movementY, y) {
+    const topZoneBottom = 80;
+    if (y <= topZoneBottom) {
+      setTranslateX(down ? movementX : withSpring(startOffset));
+      setTranslateY(down ? movementY : withSpring(0));
+
+      if (!down) {
+        positionCallback({ card: data, pos: -1 });
+        setTranslateX(withSpring(startOffset));
+        setTranslateY(withSpring(0));
+      }
+      return true;
+    }
+    return false;
+  }
+
   function publicCheckDropBottom(down, movementX, movementY, y) {
     const bottomZoneTop = 700;
     if (y >= bottomZoneTop) {
@@ -53,7 +66,7 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
       setTranslateY(down ? movementY : withSpring(0));
 
       if (!down) {
-        positionCallback({ card: data, pos: -2 }); // custom position ID
+        positionCallback({ card: data, pos: -2 });
         setTranslateX(withSpring(startOffset));
         setTranslateY(withSpring(0));
       }
@@ -75,6 +88,7 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
     const cardCenterY = (rect.top + rect.height / 2) / scale + scrollY;
 
     if (isPublic && publicCheckDropBottom(down, movement.x, movement.y, cardCenterY)) return;
+    if (!isPublic && privateCheckDropTop(down, movement.x, movement.y, cardCenterY)) return;
     
     // see if we're on any public target locations
     for (let i = 0; i < publicTargets.length; i++) {
@@ -122,7 +136,7 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
   }
 
   useEffect(() => {
-    console.log(data.attachedCards);
+    if (!data.attachedCards) return;
     setAttachedEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.category == "Energy")
           .toSorted((a,b) => a.name - b.name));

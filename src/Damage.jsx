@@ -17,7 +17,7 @@ const Damage = ({damageCounters, damageCallback}) => {
   return (
     <>
     <FaCirclePlus id="add-damage-counter-button" onClick={() => changeDamage(1)} />
-    <div id="damage-display">{displayDamageCounters * 10}</div>
+    <div id="damage-display">{displayDamageCounters ? displayDamageCounters * 10 : 0}</div>
     <FaCircleMinus id="remove-damage-counter-button" onClick={() => changeDamage(-1)} />
     </>
   );

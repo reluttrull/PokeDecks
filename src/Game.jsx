@@ -46,6 +46,7 @@ const Game = ({ deckNumber, gameStateCallback }) => {
     placeCardInSpot({
       card: data.card,
       spot: data.pos,
+      isPublicCaller: true,
       state: { hand, active, bench, discard },
       setState: { setHand, setActive, setBench, setDiscard },
       helpers: {

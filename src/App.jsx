@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Landing from './Landing.jsx';
 import Public from './Public.jsx';
+import Private from './Private.jsx';
 import './App.css';
 
 const App = () => {
@@ -15,7 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/pokeclient/" element={<Landing />} />
         <Route path="/pokeclient/public/:gameGuid" element={<Public />} />
-        {/* <Route path="/pokeclient/private/:gameGuid" element={<Private />} /> */}
+        <Route path="/pokeclient/private/:gameGuid" element={<Private />} />
         <Route path="/pokeclient/gameover" element={<GameOver />} />
       </Routes>
     </BrowserRouter>

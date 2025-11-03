@@ -131,6 +131,15 @@
   background-color: rgba(58, 58, 92, 0.5);
 }
 
+#private-hand-area {
+  position:absolute;
+  top: 150px;
+  left: 420px;
+  width: 200px;
+  height: 165px;
+  background-color: rgba(58, 58, 92, 0.5);
+}
+
 #draw-card-button {
   position: absolute;
   top: 50px; 
@@ -298,6 +307,14 @@
   left: 250px;
   width: 720px;
   height: 165px;
+  background-color: #646cff96;
+}
+
+#move-to-play-zone {
+  position: absolute;
+  top: 0px;
+  width: 720px;
+  height: 80px;
   background-color: #646cff96;
 }
 

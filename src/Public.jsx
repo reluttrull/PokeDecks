@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
 import * as signalR from "@microsoft/signalr";
-import confirm from './ConfirmationDialog.jsx';
 import PublicPlayArea from "./PublicPlayArea.jsx";
 import CoinFlip from "./CoinFlip.jsx";
 import Loading from "./Loading.jsx";
@@ -41,9 +40,11 @@ const Public = () => {
   const [loadingDone, setLoadingDone] = useState(false);
   
   const cardCallback = (data) => {
+    if (data.pos == -1) return;
     placeCardInSpot({
     card: data.card,
     spot: data.pos,
+    isPublicCaller: true,
     state: { hand: temphand, active, bench, discard },
     setState: { setHand: setTemphand, setActive, setBench, setDiscard },
     helpers: {
@@ -85,7 +86,7 @@ const Public = () => {
     // this way won't work with two devices, need to rethink
     useEffect(() => {
       let totalAttached = 0;
-      bench.forEach((c) => (totalAttached += c.attachedCards.length));
+      if (bench) bench.forEach((c) => (totalAttached += c.attachedCards.length));
       if (active) totalAttached += active.attachedCards.length;
       setNumberInDeck(
         60 -
@@ -100,8 +101,6 @@ const Public = () => {
 
   // on mount
   useEffect(() => {
-    apiGetHand(gameGuid, setTemphand);
-
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
@@ -112,6 +111,9 @@ const Public = () => {
     // receive messages from server
     connection.on("CardAddedToPlayArea", (message) => {
         console.log("Message from SignalR hub: card moved to play area", message);
+        message.damageCounters = 0;
+        message.attachedCards = [];
+        setTemphand(prevTemphand => [...prevTemphand, message]);
     });
     connection.on("CardReturnedToHand", (message) => {
         console.log("Message from SignalR hub: card returned to hand", message);
