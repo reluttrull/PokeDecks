@@ -8,24 +8,22 @@ export const apiReturnToDeck = (card, gameGuid) =>
     body: JSON.stringify(card),
   }).catch((error) => console.error("Return to deck failed:", error));
 
-export const apiDrawPrize = (gameGuid, hand, setHand, setPrizes, prizeNum, callback) =>
+export const apiDrawPrize = (gameGuid, setPrizes, prizeNum, callback) =>
   fetch(`${BASE}/drawcardfromprizes/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
       data.prizeCard.attachedCards = [];
       data.prizeCard.damageCounters = 0;
       setPrizes((prize) => prize.filter((n) => n != prizeNum));
-      //apiSendToHand(gameGuid, data.prizeCard);
       if (data.remainingPrizes == 0) apiEndGame(gameGuid, callback);
     });
 
-export const apiDrawTopCard = (gameGuid, hand, setHand) =>
+export const apiDrawTopCard = (gameGuid) =>
   fetch(`${BASE}/drawcardfromdeck/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
       data.attachedCards = [];
       data.damageCounters = 0;
-      //apiSendToHand(gameGuid, data);
     });
 
 export const apiEndGame = (gameGuid, callback) =>
@@ -46,7 +44,7 @@ export const apiFetchCardsFromDeck = (gameGuid, setCardsInDeck) =>
     .then((response) => response.json())
     .then((data) => setCardsInDeck(data));
 
-export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, setCardsInDeck) =>
+export const apiDrawSpecificCard = (gameGuid, card, cardsInDeck, setCardsInDeck) =>
   fetch(`${BASE}/drawthiscardfromdeck/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -56,7 +54,6 @@ export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, 
       card.attachedCards = [];
       card.damageCounters = 0;
       console.log(card);
-      //apiSendToHand(gameGuid, card);
       setCardsInDeck(cardsInDeck.filter((c) => c.numberInDeck != card.numberInDeck));
     }
   });

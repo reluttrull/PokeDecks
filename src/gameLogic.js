@@ -1,5 +1,5 @@
 // logic helper functions
-import { apiFetchValidEvolutions, apiSendToPlayArea, apiSendToHand } from "./gameApi.js";
+import { apiFetchValidEvolutions, apiSendToHand } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // must be a Pokemon card
@@ -19,15 +19,7 @@ export function initializeGame(deckNumber, gameGuid) { //setHand, mulligans) {
     .then((data) => {
       if (!data) throw "Game data empty!";
       if (data.gameGuid) gameGuid.current = data.gameGuid;
-      // if (data.hand) {
-      //   const expandedHand = data.hand.map((card) => ({
-      //     ...card,
-      //     attachedCards: [],
-      //     damageCounters: 0,
-      //   }));
-      //   setHand(expandedHand);
-      // }
-      // if (data.mulligans) mulligans.current = data.mulligans;
+      // TODO: display mulligans
     })
     .catch((err) => console.error("Error fetching game start:", err));
 }
@@ -147,7 +139,6 @@ export function tightenHandLayoutLogic(hand, setHand, setRerenderKey) {
 function shouldAttachAsEnergy(baseCard, cardToAttach) {
   if (cardToAttach.category == "Energy") return true;
   if (baseCard.name != "Voltorb" && cardToAttach.name == "Electrode" && cardToAttach.attachedCards.length > 0) {
-    // get rid of Electrode???
     return true;
   }
   return false;

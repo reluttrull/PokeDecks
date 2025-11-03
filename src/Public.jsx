@@ -59,8 +59,8 @@ const Public = () => {
     
   // api handlers
   const drawPrize = (prizeNum) =>
-    apiDrawPrize(gameGuid, temphand, setTemphand, setPrizes, prizeNum, function() {});
-  const drawTopCard = () => apiDrawTopCard(gameGuid, temphand, setTemphand);
+    apiDrawPrize(gameGuid, setPrizes, prizeNum, function() {});
+  const drawTopCard = () => apiDrawTopCard(gameGuid);
   const endGame = () => {
     apiEndGame(gameGuid, function() {});
     navigate("/pokeclient/gameover");
@@ -82,7 +82,7 @@ const Public = () => {
   }
   const handleCloseSelectFromDiscard = () => setIsSelectingDiscard(false);
   const addFromDeckToHand = (card) =>
-    apiDrawSpecificCard(gameGuid, card, temphand, setTemphand, cardsInDeck, setCardsInDeck);
+    apiDrawSpecificCard(gameGuid, card, cardsInDeck, setCardsInDeck);
   const addFromDiscardToHand = (card) => {
     card.attachedCards = [];
     card.damageCounters = 0;
