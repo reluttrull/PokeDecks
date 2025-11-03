@@ -5,6 +5,7 @@ import * as signalR from "@microsoft/signalr";
 import PublicPlayArea from "./PublicPlayArea.jsx";
 import CoinFlip from "./CoinFlip.jsx";
 import Loading from "./Loading.jsx";
+import QRWrapper from "./QRWrapper.jsx";
 import {
   placeCardInSpot,
   attachOrSwapCard,
@@ -195,6 +196,10 @@ const Public = () => {
             handleSelectFromDeck={handleSelectFromDeck}
             handleShuffle={handleShuffle}
           />
+          <div id="private-qr">
+            <QRWrapper id="private-qr" url={window.location.href.replace('public', 'private')} />
+            {window.location.href.replace('public', 'private')}
+          </div>
           <button id="flip-coin-button" onClick={getCoinFlip}>flip coin</button>
           <button id="draw-card-button" onClick={drawTopCard}>draw</button>
           <button id="end-game-button" onClick={endGame}>end game</button>

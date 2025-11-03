@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
-import Game from './Game.jsx';
 import './App.css';
 import { apiGetAllDeckBriefs } from './deckApi.js';
 import { initializeGame } from './gameLogic.js';
-import baseset from './data/baseset.json';
 
 const Landing = () => {
   const navigate = useNavigate();
