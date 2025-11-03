@@ -74,6 +74,12 @@ const Public = () => {
   };
   const handleCloseSelectFromDeck = () => setIsSelectingDeck(false);
   const handleSelectFromDiscard = () => setIsSelectingDiscard(true);
+  const handleDiscardHand =  async () => {
+    if (await confirm({ confirmation: 'Do you really want to discard your whole hand?' })) {
+      setDiscard([...hand, ...discard]);
+      setHand([]);
+    }
+  }
   const handleCloseSelectFromDiscard = () => setIsSelectingDiscard(false);
   const addFromDeckToHand = (card) =>
     apiDrawSpecificCard(gameGuid, card, temphand, setTemphand, cardsInDeck, setCardsInDeck);
@@ -83,22 +89,6 @@ const Public = () => {
     apiSendToHand(gameGuid, card);
     setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
-  
-    // this way won't work with two devices, need to rethink
-    useEffect(() => {
-      let totalAttached = 0;
-      if (bench) bench.forEach((c) => (totalAttached += c.attachedCards.length));
-      if (active) totalAttached += active.attachedCards.length;
-      setNumberInDeck(
-        60 -
-          temphand.length -
-          bench.length -
-          discard.length -
-          prizes.length -
-          (active ? 1 : 0) -
-          totalAttached
-      );
-    }, [temphand, active, bench, discard, prizes]);
 
   // on mount
   useEffect(() => {
@@ -118,6 +108,10 @@ const Public = () => {
     });
     connection.on("CardMovedToHand", (message) => {
         console.log("Message from SignalR hub: card returned to hand", message);
+    });
+    connection.on("DeckChanged", (message) => {
+        console.log("Message from SignalR hub: number of cards in deck changed", message);
+        setNumberInDeck(message);
     });
 
     // start connection
@@ -193,6 +187,7 @@ const Public = () => {
             cardCallback={cardCallback}
             drawPrize={drawPrize}
             handleSelectFromDiscard={handleSelectFromDiscard}
+            handleDiscardHand={handleDiscardHand}
             handleSelectFromDeck={handleSelectFromDeck}
             handleShuffle={handleShuffle}
           />

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
+import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
   apiGetHand, apiSendToPlayArea
 } from "./gameApi.js";
@@ -18,6 +19,8 @@ const Private = () => {
     apiSendToPlayArea(gameGuid, card);
     // may not need to do anything else here
   };
+  const tightenHandLayout = () =>
+    tightenHandLayoutLogic(hand, setHand, setRerenderKey);
 
   // on mount
   useEffect(() => {
@@ -61,6 +64,7 @@ const Private = () => {
             hand={hand}
             rerenderKey={rerenderKey}
             cardCallback={cardCallback}
+            tightenHandLayout={tightenHandLayout}
           />
     </>
   );

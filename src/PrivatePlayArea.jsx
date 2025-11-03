@@ -1,16 +1,24 @@
 // PublicPlayArea.jsx
 import React from 'react';
+import { PiCardsThree } from 'react-icons/pi';
 import PrivateCard from './PrivateCard.jsx';
 import './App.css';
 
 const PrivatePlayArea = ({
   hand, rerenderKey,
-  cardCallback,
+  cardCallback, tightenHandLayout
 }) => {
   return (
     <div>
       {/* Hand */}
       <div id="private-hand-area" className="card-target">
+        <PiCardsThree
+          id="hand-tighten-button"
+          className="icon-button"
+          onClick={tightenHandLayout}
+          alt="tighten up hand layout"
+          title="tighten up hand layout"
+        />
         {hand.map((card, index) => (
           <PrivateCard
             key={`${card.numberInDeck}-${rerenderKey}`}
