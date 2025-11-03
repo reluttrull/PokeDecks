@@ -14,8 +14,8 @@ export const apiDrawPrize = (gameGuid, hand, setHand, setPrizes, prizeNum, callb
     .then((data) => {
       data.prizeCard.attachedCards = [];
       data.prizeCard.damageCounters = 0;
-      setHand([...hand, data.prizeCard]);
       setPrizes((prize) => prize.filter((n) => n != prizeNum));
+      //apiSendToHand(gameGuid, data.prizeCard);
       if (data.remainingPrizes == 0) apiEndGame(gameGuid, callback);
     });
 
@@ -25,7 +25,7 @@ export const apiDrawTopCard = (gameGuid, hand, setHand) =>
     .then((data) => {
       data.attachedCards = [];
       data.damageCounters = 0;
-      setHand([...hand, data]);
+      //apiSendToHand(gameGuid, data);
     });
 
 export const apiEndGame = (gameGuid, callback) =>
@@ -56,7 +56,7 @@ export const apiDrawSpecificCard = (gameGuid, card, hand, setHand, cardsInDeck, 
       card.attachedCards = [];
       card.damageCounters = 0;
       console.log(card);
-      setHand([...hand, card]);
+      //apiSendToHand(gameGuid, card);
       setCardsInDeck(cardsInDeck.filter((c) => c.numberInDeck != card.numberInDeck));
     }
   });

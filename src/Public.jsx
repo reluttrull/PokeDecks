@@ -19,7 +19,7 @@ import {
   apiShuffleDeck,
   apiFetchCardsFromDeck,
   apiDrawSpecificCard,
-  apiGetHand
+  apiSendToHand
 } from "./gameApi.js";
 import "./App.css";
 
@@ -80,7 +80,7 @@ const Public = () => {
   const addFromDiscardToHand = (card) => {
     card.attachedCards = [];
     card.damageCounters = 0;
-    setTemphand([...temphand, card]);
+    apiSendToHand(gameGuid, card);
     setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
   
@@ -116,7 +116,7 @@ const Public = () => {
         message.attachedCards = [];
         setTemphand(prevTemphand => [...prevTemphand, message]);
     });
-    connection.on("CardReturnedToHand", (message) => {
+    connection.on("CardMovedToHand", (message) => {
         console.log("Message from SignalR hub: card returned to hand", message);
     });
 

@@ -35,7 +35,7 @@ const Private = () => {
         console.log("Message from SignalR hub: card moved to play area", message);
         setHand(prevHand => prevHand.filter(c => c.numberInDeck !== message.numberInDeck));
     });
-    connection.on("CardReturnedToHand", (message) => {
+    connection.on("CardMovedToHand", (message) => {
         console.log("Message from SignalR hub: card returned to hand", message);
         message.damageCounters = 0;
         message.attachedCards = [];
