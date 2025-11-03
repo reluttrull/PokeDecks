@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { IoIosTabletLandscape } from 'react-icons/io';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
 import './App.css';
@@ -43,6 +44,13 @@ const Landing = () => {
   return (
     <>
         <div style={{textAlign:'left'}}>
+          Welcome!  In order to use this game client, you will need two devices: <br />
+          <ul>
+          <li>one large device to show all the public parts of the game <strong><em>(this device)</em></strong><br />
+              (e.g. tablet or computer)</li>
+          <li>one small device to manage your hand<br />
+              (e.g. phone or small tablet)</li>
+          </ul>
           {deckBriefs && deckBriefs.map(brief => 
           <div key={brief.deckId}>
             <input type="radio" id={brief.name} value={brief.deckId} checked={deckNum == brief.deckId} onChange={handleDeckNumChange} />
@@ -50,7 +58,7 @@ const Landing = () => {
           <br />
           </div>)}
           <br />
-          <button onClick={startGame}>Start game</button>
+          <button onClick={startGame}><IoIosTabletLandscape /><span style={{paddingLeft:'20px'}}>Start game</span></button>
         </div>
       {coinResult != null && <CoinFlip isHeads={coinResult} />}
     </>
