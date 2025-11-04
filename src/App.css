@@ -144,7 +144,7 @@ ul {
 #private-hand-area {
   position:absolute;
   top: 150px;
-  left: 420px;
+  left: 200px;
   width: 200px;
   height: 165px;
   background-color: rgba(58, 58, 92, 0.5);
@@ -333,8 +333,12 @@ ul {
 
 #move-to-play-zone {
   position: absolute;
+  text-align: left;
+  padding-top: 20px;
+  padding-left: 50px;
   top: 0px;
-  width: 720px;
+  left: 0px;
+  width: 100vw;
   height: 80px;
   background-color: #646cff96;
 }
