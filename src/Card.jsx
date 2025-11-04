@@ -86,9 +86,6 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
     const rect = ref.current.getBoundingClientRect();
     const cardCenterX = (rect.left + rect.width / 2) / scale + scrollX;
     const cardCenterY = (rect.top + rect.height / 2) / scale + scrollY;
-
-    if (isPublic && publicCheckDropBottom(down, movement.x, movement.y, cardCenterY)) return;
-    if (!isPublic && privateCheckDropTop(down, movement.x, movement.y, cardCenterY)) return;
     
     // see if we're on any public target locations
     for (let i = 0; i < publicTargets.length; i++) {
@@ -105,6 +102,10 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
         return;
       }
     }
+
+    
+    if (isPublic && publicCheckDropBottom(down, movement.x, movement.y, cardCenterY)) return;
+    if (!isPublic && privateCheckDropTop(down, movement.x, movement.y, cardCenterY)) return;
 
     setTranslateX(down ? movement.x : withSpring(startOffset));
     setTranslateY(down ? movement.y : withSpring(0));
