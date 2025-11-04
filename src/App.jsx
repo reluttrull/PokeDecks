@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Landing from './Landing.jsx';
 import Public from './Public.jsx';
 import Private from './Private.jsx';
@@ -12,14 +12,14 @@ const App = () => {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path="/pokeclient/" element={<Landing />} />
-        <Route path="/pokeclient/public/:gameGuid" element={<Public />} />
-        <Route path="/pokeclient/private/:gameGuid" element={<Private />} />
-        <Route path="/pokeclient/gameover" element={<GameOver />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/public/:gameGuid" element={<Public />} />
+        <Route path="/private/:gameGuid" element={<Private />} />
+        <Route path="/gameover" element={<GameOver />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

@@ -18,7 +18,7 @@ const Landing = () => {
     initializeGame(deckNum, gameGuid);
     setTimeout(() => {
       setCoinResult(null);
-      navigate(`/pokeclient/public/${gameGuid.current}`);
+      navigate(`/public/${gameGuid.current}`);
     }, 5000);
   }
 

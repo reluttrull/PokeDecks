@@ -63,7 +63,7 @@ const Public = () => {
   const drawTopCard = () => apiDrawTopCard(gameGuid);
   const endGame = () => {
     apiEndGame(gameGuid, function() {});
-    navigate("/pokeclient/gameover");
+    navigate("/gameover");
   };
   const getCoinFlip = () => apiFlipCoin(setCoinResult);
   const closeCoinFlip = () => setCoinResult(null);
