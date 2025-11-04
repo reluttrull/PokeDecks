@@ -51,6 +51,16 @@
   color: #888;
 }
 
+.deck-info {
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+ul {
+  list-style: none; 
+  padding-left: 0; 
+}
+
 .card-target {
   position: absolute;
   z-index: 0;

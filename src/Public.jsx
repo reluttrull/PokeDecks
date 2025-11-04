@@ -58,8 +58,10 @@ const Public = () => {
   };
     
   // api handlers
-  const drawPrize = (prizeNum) =>
-    apiDrawPrize(gameGuid, setPrizes, prizeNum, function() {});
+  async function drawPrize(prizeNum) {
+    let gameActive = await apiDrawPrize(gameGuid, setPrizes, prizeNum, function() {});
+    if (!gameActive) endGame();
+  }
   const drawTopCard = () => apiDrawTopCard(gameGuid);
   const endGame = () => {
     apiEndGame(gameGuid, function() {});

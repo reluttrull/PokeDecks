@@ -15,7 +15,11 @@ export const apiDrawPrize = (gameGuid, setPrizes, prizeNum, callback) =>
       data.prizeCard.attachedCards = [];
       data.prizeCard.damageCounters = 0;
       setPrizes((prize) => prize.filter((n) => n != prizeNum));
-      if (data.remainingPrizes == 0) apiEndGame(gameGuid, callback);
+      if (data.remainingPrizes == 0) {
+        apiEndGame(gameGuid, callback);
+        return false;
+      }
+      return true;
     });
 
 export const apiDrawTopCard = (gameGuid) =>
