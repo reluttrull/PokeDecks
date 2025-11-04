@@ -22,7 +22,6 @@ const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
     <>
     <div className="card-target" id="deck">
         <div className={isAnimated ? "card-list is-animated" : "card-list"}>
-            <div style={{zIndex:6}}>{displayNum}</div>
             <div className="card-list__item" data-card="0">
                 <img src="/pokeclient/cardback.png" className="card-size" />
             </div>
@@ -34,7 +33,8 @@ const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
             </div>
         </div>
         <button id="deck-select-button" className="button" onClick={handleSelect}>Select from deck</button>
-        <button className={seenDeckOrder ? "button shuffle-reminder" : "button"} onClick={handleShuffle}>Shuffle</button>
+        <button id="deck-shuffle-button" className={seenDeckOrder ? "button shuffle-reminder" : "button"} onClick={handleShuffle}>Shuffle</button>
+        <div id="number-in-deck-display">{displayNum}</div>
     </div>
     </>
   );

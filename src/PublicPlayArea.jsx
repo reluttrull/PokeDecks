@@ -17,7 +17,7 @@ const PublicPlayArea = ({
     <div>
       {/* Debug info */}
       <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-      <div style={{position: 'absolute', top: '150px', left: '700px', width: '200px'}}># cards in bench = {bench?.length}</div>
+      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in bench = {bench?.length}</div>
 
       {/* Active */}
       <div id="user-active" className="card-target">
@@ -46,9 +46,9 @@ const PublicPlayArea = ({
 
       {/* Prizes */}
       {prizes.map((prizeNum) => (
-        <a href="#" key={prizeNum} onClick={() => drawPrize(prizeNum)}>
+        <span key={prizeNum} onClick={() => drawPrize(prizeNum)} className="icon-button">
           <PrizeCard prizeNum={prizeNum} />
-        </a>
+        </span>
       ))}
 
       {/* Temp Hand */}
