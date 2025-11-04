@@ -5,9 +5,12 @@ import './App.css';
 const QRWrapper = ({url}) => {
 
   return (
-    <div style={{ background: 'white', padding: '16px' }}>
-        <QRCode style={{ height: '100%', width: '100%'}} value={url} />
+    <>
+    <div style={{ background: '#eee', padding: '8px' }}>
+        <QRCode value={url} className="qr" />
     </div>
+    <small>{url}</small>
+    </>
   );
 };
 

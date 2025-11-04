@@ -59,44 +59,44 @@
 }
 
 #user-active {
-  top: 50px;
+  top: 20px;
   left: 550px;
   background-color: rgba(200, 10, 10, 0.5);
 }
 
 #user-bench-1 {
-  top: 250px;
+  top: 210px;
   left: 250px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-2 {
-  top: 250px;
+  top: 210px;
   left: 400px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-3 {
-  top: 250px;
+  top: 210px;
   left: 550px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-4 {
-  top: 250px;
+  top: 210px;
   left: 700px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #user-bench-5 {
-  top: 250px;
+  top: 210px;
   left: 850px;
   background-color: rgba(170, 220, 230, 0.5);
 }
 
 #discard-area {
-  top: 420px;
-  left: 1050px;
+  top: 400px;
+  left: 1000px;
   background-color: rgba(120, 120, 120, 0.5);
 }
 
@@ -117,15 +117,15 @@
 #deck {
   position:absolute;
   top: 210px;
-  left: 1050px;
+  left: 1000px;
   width: 120px;
   height: 165px;
 }
 
 #hand-area {
   position:absolute;
-  top: 450px;
-  left: 420px;
+  top: 400px;
+  left: 20px;
   width: 200px;
   height: 165px;
   background-color: rgba(58, 58, 92, 0.5);
@@ -143,7 +143,7 @@
 #draw-card-button {
   position: absolute;
   top: 50px; 
-  left: 1000px;
+  left: 920px;
   width: 120px;
   color: #fff;
   background-color: rgba(20, 20, 20, 0.7);
@@ -152,7 +152,7 @@
 #flip-coin-button {
   position: absolute;
   top: 100px;
-  left: 1000px;
+  left: 920px;
   width: 120px;
   color: #fff;
   background-color: rgba(20, 20, 20, 0.7);
@@ -161,7 +161,7 @@
 #end-game-button {
   position: absolute;
   top: 150px; 
-  left: 1000px;
+  left: 920px;
   width: 120px;
   color: #fff;
   background-color: rgba(200, 10, 10, 0.7);
@@ -171,6 +171,17 @@
   top: 20px;
   width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
+}
+
+#number-in-deck-display {
+  position: absolute;
+  font-weight: bold;
+  font-size:xx-large;
+  color:chartreuse;
+  text-shadow: 3px 3px #333;
+  top: 20px;
+  left: 40px;
+  z-index: 6;
 }
 
 #add-damage-counter-button {
@@ -303,7 +314,7 @@
 
 #return-to-hand-zone {
   position: absolute;
-  top: 700px;
+  top: 400px;
   left: 250px;
   width: 720px;
   height: 165px;
@@ -320,13 +331,20 @@
 
 #private-qr {
   position: absolute;
-  top: 700px;
-  left: 50px;
-  width: 150px;
+  top: 10px;
+  left: 250px;
+  width: 100px;
+  height:120px;
+  font-size:x-small;
   word-wrap:break-word;
   -webkit-user-select: text; /* Safari */
   -moz-user-select: text; /* Firefox */
   user-select:text;
+}
+
+.qr {
+  height: 100%;
+  max-width: 100%;
 }
 
 @-webkit-keyframes spin-tails {

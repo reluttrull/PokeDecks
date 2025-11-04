@@ -23,16 +23,16 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
   Modal.setAppElement('#root');
   const [backgroundImage, setBackgroundImage] = useValue(urlstring);
   const publicTargets = [
-    { left: 480, top: 470, position: -1}, // temphand
-    { left: 590, top: 470, position: -1}, // extend hand area right
-    { left: 600, top: 115, position: 0 }, // active
-    { left: 300, top: 315, position: 1 }, // bench 1
-    { left: 450, top: 315, position: 2 }, // bench 2
-    { left: 600, top: 315, position: 3 }, // bench 3
-    { left: 750, top: 315, position: 4 }, // bench 4
-    { left: 900, top: 315, position: 5 }, // bench 5
-    { left: 1100, top: 485, position: 6 }, // discard
-    { left: 1100, top: 310, position: 7 }, // deck
+    { left: 80, top: 420, position: -1}, // temphand
+    { left: 190, top: 420, position: -1}, // extend hand area right
+    { left: 600, top: 85, position: 0 }, // active
+    { left: 300, top: 275, position: 1 }, // bench 1
+    { left: 450, top: 275, position: 2 }, // bench 2
+    { left: 600, top: 275, position: 3 }, // bench 3
+    { left: 750, top: 275, position: 4 }, // bench 4
+    { left: 900, top: 275, position: 5 }, // bench 5
+    { left: 1050, top: 465, position: 6 }, // discard
+    { left: 1050, top: 310, position: 7 }, // deck
   ];
   
   function openModal() {
@@ -60,7 +60,7 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
   }
 
   function publicCheckDropBottom(down, movementX, movementY, y) {
-    const bottomZoneTop = 700;
+    const bottomZoneTop = 400;
     if (y >= bottomZoneTop) {
       setTranslateX(down ? movementX : withSpring(startOffset));
       setTranslateY(down ? movementY : withSpring(0));

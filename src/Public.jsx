@@ -139,13 +139,10 @@ const Public = () => {
           onRequestClose={handleCloseSelectFromDeck}
         >
           {cardsInDeck.map((card) => (
-            <a
-              href="#"
+            <img
               key={"deckselect" + card.numberInDeck}
               onClick={() => addFromDeckToHand(card)}
-            >
-              <img src={`${card.image}/low.webp`} className="card-size" />
-            </a>
+              src={`${card.image}/low.webp`} className="card-size icon-button" />
           ))}
           <button onClick={handleCloseSelectFromDeck}>
             Done selecting cards
@@ -160,13 +157,10 @@ const Public = () => {
           onRequestClose={handleCloseSelectFromDiscard}
         >
           {discard.map((card) => (
-            <a
-              href="#"
-              key={"discardselect" + card.numberInDeck}
-              onClick={() => addFromDiscardToHand(card)}
-            >
-              <img src={`${card.image}/low.webp`} className="card-size" />
-            </a>
+            <img 
+            key={"discardselect" + card.numberInDeck}
+            onClick={() => addFromDiscardToHand(card)}
+            src={`${card.image}/low.webp`} className="card-size icon-button" />
           ))}
           <button onClick={handleCloseSelectFromDiscard}>
             Done selecting cards
@@ -193,7 +187,6 @@ const Public = () => {
           />
           <div id="private-qr">
             <QRWrapper id="private-qr" url={window.location.href.replace('public', 'private')} />
-            {window.location.href.replace('public', 'private')}
           </div>
           <button id="flip-coin-button" onClick={getCoinFlip}>flip coin</button>
           <button id="draw-card-button" onClick={drawTopCard}>draw</button>
