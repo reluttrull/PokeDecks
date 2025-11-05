@@ -150,14 +150,14 @@ ul {
 
 #game-logs-button {
   top: 330px;
-  left: 200px;
+  left: 300px;
   width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
 }
 
 #discard-hand-button {
-  top: 380px;
-  left: 200px;
+  top: 330px;
+  left: 100px;
   width: 180px;
   background-color: rgba(200, 10, 10, 0.7);
 }

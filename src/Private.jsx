@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from "react-modal";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
 import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
@@ -12,11 +12,13 @@ import "./App.css";
 
 const Private = () => {
   const { gameGuid } = useParams();
+  const navigate = useNavigate();
   const [hand, setHand] = useState([]);
   const [rerenderKey, setRerenderKey] = useState(0);
   const [logEntries, setLogEntries] = useState([]);
   const [isLogOpen, setIsLogOpen] = useState(false);
   Modal.setAppElement("#root");
+  Modal.defaultStyles.overlay.backgroundColor = 'rgba(255, 255, 255, 0.85)';
   
   const cardCallback = (data) => {
     let card = data.card;
@@ -58,6 +60,10 @@ const Private = () => {
         message.attachedCards = [];
         setHand(prevHand => [...prevHand, message]);
     });
+    connection.on("GameOver", () => {
+      console.log("Message from SignalR hub: game over");
+      navigate("/gameover");
+    });
 
     // start connection
     connection.start()
@@ -74,30 +80,29 @@ const Private = () => {
 
   return (
     <>
-      {isLogOpen && (
-        <Modal
-          className="scrollable-modal"
-          isOpen={isLogOpen}
-          onRequestClose={handleCloseLog}
-        >
-          {logEntries && logEntries.map((log) => (
-            <>
-              <div style={{color:'black'}}
-                key={"log-" + log.timestamp}>
-                <span>{log.name}</span><span style={{paddingLeft:'20px'}}>{log.displayDateTime}</span>
-              </div>
-              <div>
-                {log.involvedCards && log.involvedCards.map((card) => (
-                  <img
-                    key={`log-${log.timestamp}-${card.numberInDeck}`}
-                    src={`${card.image}/low.webp`} className="tiny-card-size" />
-                ))}
-              </div>
-            </>
-          ))}
-          <button style={{marginTop:'20px'}} onClick={handleCloseLog}>Done</button>
-        </Modal>
-      )}
+      <Modal
+        className="scrollable-modal"
+        isOpen={isLogOpen}
+        onRequestClose={handleCloseLog}
+      >
+        {logEntries && logEntries.map((log) => (
+          <div style={{color:'black'}}
+              key={"log-" + log.timestamp}>
+            <div>
+              <span><strong>{log.name}</strong></span><span style={{paddingLeft:'20px'}}>{log.displayDateTime}</span>
+            <hr />
+            </div>
+            <div>
+              {log.involvedCards && log.involvedCards.map((card) => (
+                <img
+                  key={`log-${log.timestamp}-${card.numberInDeck}`}
+                  src={`${card.image}/low.webp`} className="tiny-card-size" />
+              ))}
+            </div>
+          </div>
+        ))}
+        <button style={{marginTop:'20px'}} onClick={handleCloseLog}>Done</button>
+      </Modal>
       <PrivatePlayArea
         hand={hand}
         rerenderKey={rerenderKey}
