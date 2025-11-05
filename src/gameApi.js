@@ -35,8 +35,8 @@ export const apiEndGame = (gameGuid, callback) =>
     if (response.status == 204) callback({ ended: true });
   });
 
-export const apiFlipCoin = (setCoinResult) =>
-  fetch(`${BASE}/flipcoin`)
+export const apiFlipCoin = (gameGuid, setCoinResult) =>
+  fetch(`${BASE}/flipcoin/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => setCoinResult(data));
 

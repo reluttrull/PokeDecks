@@ -68,7 +68,7 @@ const Public = () => {
     apiEndGame(gameGuid, function() {});
     navigate("/gameover");
   };
-  const getCoinFlip = () => apiFlipCoin(setCoinResult);
+  const getCoinFlip = () => apiFlipCoin(gameGuid, setCoinResult);
   const closeCoinFlip = () => setCoinResult(null);
   const handleShuffle = () => apiShuffleDeck(gameGuid);
   const handleSelectFromDeck = () => {
