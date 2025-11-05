@@ -19,6 +19,7 @@ import {
   apiShuffleDeck,
   apiFetchCardsFromDeck,
   apiDrawSpecificCard,
+  apiDrawSpecificCardFromDiscard,
   apiSendToHand
 } from "./gameApi.js";
 import "./App.css";
@@ -88,7 +89,7 @@ const Public = () => {
   const addFromDiscardToHand = (card) => {
     card.attachedCards = [];
     card.damageCounters = 0;
-    apiSendToHand(gameGuid, card);
+    apiDrawSpecificCardFromDiscard(gameGuid, card, discard, setDiscard);
     setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
 
@@ -114,6 +115,10 @@ const Public = () => {
     connection.on("DeckChanged", (message) => {
         console.log("Message from SignalR hub: number of cards in deck changed", message);
         setNumberInDeck(message);
+    });
+    connection.on("DiscardChanged", (message) => {
+        console.log("Message from SignalR hub: discard pile changed", message);
+        setDiscard(message);
     });
 
     // start connection
