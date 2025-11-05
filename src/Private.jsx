@@ -70,17 +70,17 @@ const Private = () => {
     <>
       {isLogOpen && (
         <Modal
-          className="card-overlay-container"
+          className="scrollable-modal"
           isOpen={isLogOpen}
           onRequestClose={handleCloseLog}
         >
           {logEntries && logEntries.map((log) => (
             <div style={{color:'black'}}
               key={"log-" + log.timestamp}>
-                <span>{log.name}</span><span style={{paddingLeft:'20px'}}>{log.timestamp}</span>
+                <span>{log.name}</span><span style={{paddingLeft:'20px'}}>{log.displayDateTime}</span>
               </div>
           ))}
-          <button onClick={handleCloseLog}>Done</button>
+          <button style={{marginTop:'20px'}} onClick={handleCloseLog}>Done</button>
         </Modal>
       )}
       <PrivatePlayArea

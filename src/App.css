@@ -144,15 +144,15 @@ ul {
 #private-hand-area {
   position:absolute;
   top: 150px;
-  left: 200px;
+  left: 100px;
   width: 200px;
   height: 165px;
   background-color: rgba(58, 58, 92, 0.5);
 }
 
 #game-logs-button {
-  top: 350px;
-  left: 400px;
+  top: 330px;
+  left: 200px;
   width: 180px;
   background-color: rgba(20, 20, 20, 0.7);
 }
@@ -288,6 +288,15 @@ ul {
   left:50%;
   max-height:700px;
   max-width:400px;
+}
+
+.scrollable-modal {
+  padding-top:25px;
+  padding-left:25px;
+  max-height: 80vh;
+  min-width: 50%;
+  max-width: 500px;
+  overflow-y: auto;
 }
 
 

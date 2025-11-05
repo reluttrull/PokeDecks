@@ -97,5 +97,9 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
   fetch(`${BASE}/getgamehistory/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
-      setLogEntries(data.logs);
+      const logEntries = data.logs.map((log) => ({
+        ...log,
+        displayDateTime: new Date(log.timestamp).toLocaleString()
+      }));
+      setLogEntries(logEntries);
     });
