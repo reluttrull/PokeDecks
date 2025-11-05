@@ -10,6 +10,7 @@ const PrivatePlayArea = ({
 }) => {
   return (
     <div>
+      <div id="move-to-play-zone">move to play area</div>
       {/* Hand */}
       <div id="private-hand-area" className="card-target">
         <PiCardsThree
@@ -28,7 +29,6 @@ const PrivatePlayArea = ({
           />
         ))}
       </div>
-      <div id="move-to-play-zone">move to play area</div>
     </div>
   );
 };

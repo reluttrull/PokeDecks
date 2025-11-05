@@ -150,6 +150,13 @@ ul {
   background-color: rgba(58, 58, 92, 0.5);
 }
 
+#game-logs-button {
+  top: 350px;
+  left: 400px;
+  width: 180px;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
 #draw-card-button {
   position: absolute;
   top: 50px; 

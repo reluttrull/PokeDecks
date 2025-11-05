@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import Modal from "react-modal";
+import { useParams } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
 import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
-  apiGetHand, apiSendToPlayArea
+  apiGetHand, apiSendToPlayArea, apiFetchLog
 } from "./gameApi.js";
 import PrivatePlayArea from './PrivatePlayArea.jsx';
 import "./App.css";
 
 const Private = () => {
   const { gameGuid } = useParams();
-  const navigate = useNavigate();
   const [hand, setHand] = useState([]);
   const [rerenderKey, setRerenderKey] = useState(0);
+  const [logEntries, setLogEntries] = useState([]);
+  const [isLogOpen, setIsLogOpen] = useState(false);
+  Modal.setAppElement("#root");
   
   const cardCallback = (data) => {
     let card = data.card;
@@ -21,6 +24,11 @@ const Private = () => {
   };
   const tightenHandLayout = () =>
     tightenHandLayoutLogic(hand, setHand, setRerenderKey);
+  const handleCheckLog = () => {
+    apiFetchLog(gameGuid, setLogEntries);
+    setIsLogOpen(true);
+  };
+  const handleCloseLog = () => setIsLogOpen(false);
 
   // on mount
   useEffect(() => {
@@ -60,12 +68,28 @@ const Private = () => {
 
   return (
     <>
-          <PrivatePlayArea
-            hand={hand}
-            rerenderKey={rerenderKey}
-            cardCallback={cardCallback}
-            tightenHandLayout={tightenHandLayout}
-          />
+      {isLogOpen && (
+        <Modal
+          className="card-overlay-container"
+          isOpen={isLogOpen}
+          onRequestClose={handleCloseLog}
+        >
+          {logEntries && logEntries.map((log) => (
+            <div style={{color:'black'}}
+              key={"log-" + log.timestamp}>
+                <span>{log.name}</span><span style={{paddingLeft:'20px'}}>{log.timestamp}</span>
+              </div>
+          ))}
+          <button onClick={handleCloseLog}>Done</button>
+        </Modal>
+      )}
+      <PrivatePlayArea
+        hand={hand}
+        rerenderKey={rerenderKey}
+        cardCallback={cardCallback}
+        tightenHandLayout={tightenHandLayout}
+      />
+      <button className="button" id="game-logs-button" onClick={handleCheckLog}>Game log</button>
     </>
   );
 };

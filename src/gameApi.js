@@ -92,3 +92,10 @@ export const apiFetchValidEvolutions = (pokemonName) =>
   fetch(`${BASE}/getvalidevolutions/${pokemonName}`)
     .then((response) => (response.ok ? response.json() : []))
     .catch(() => []);
+
+export const apiFetchLog = (gameGuid, setLogEntries) =>
+  fetch(`${BASE}/getgamehistory/${gameGuid}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setLogEntries(data.logs);
+    });
