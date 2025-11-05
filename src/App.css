@@ -47,6 +47,11 @@
   height: 165px;
 }
 
+.tiny-card-size {
+  width: 50px;
+  height: 69px;
+}
+
 .read-the-docs {
   color: #888;
 }

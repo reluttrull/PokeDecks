@@ -81,10 +81,19 @@ const Private = () => {
           onRequestClose={handleCloseLog}
         >
           {logEntries && logEntries.map((log) => (
-            <div style={{color:'black'}}
-              key={"log-" + log.timestamp}>
+            <>
+              <div style={{color:'black'}}
+                key={"log-" + log.timestamp}>
                 <span>{log.name}</span><span style={{paddingLeft:'20px'}}>{log.displayDateTime}</span>
               </div>
+              <div>
+                {log.involvedCards && log.involvedCards.map((card) => (
+                  <img
+                    key={`log-${log.timestamp}-${card.numberInDeck}`}
+                    src={`${card.image}/low.webp`} className="tiny-card-size" />
+                ))}
+              </div>
+            </>
           ))}
           <button style={{marginTop:'20px'}} onClick={handleCloseLog}>Done</button>
         </Modal>
