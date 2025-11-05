@@ -9,7 +9,7 @@ const QRWrapper = ({url}) => {
     <div style={{ background: '#eee', padding: '8px' }}>
         <QRCode value={url} className="qr" />
     </div>
-    <small>{url}</small>
+    <button onClick={() => navigator.clipboard.writeText(url)}>Copy hand URL</button>
     </>
   );
 };
