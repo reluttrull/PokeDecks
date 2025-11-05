@@ -1,5 +1,5 @@
 // logic helper functions
-import { apiFetchValidEvolutions, apiSendToHand } from "./gameApi.js";
+import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // must be a Pokemon card
@@ -105,9 +105,11 @@ export async function placeCardInSpot({
       break;
 
     case 6:
+      card.attachedCards.forEach((c) => apiDiscardCard(gameGuid, c));
       let newDiscard = [...card.attachedCards, ...discard];
       card.attachedCards = [];
       newDiscard = [card, ...newDiscard];
+      apiDiscardCard(gameGuid, card);
       setDiscard(newDiscard);
       removeCard(card, { hand, active, bench, setHand, setActive, setBench });
       break;

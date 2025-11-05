@@ -4,9 +4,10 @@ import { useParams } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
 import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
-  apiGetHand, apiSendToPlayArea, apiFetchLog
+  apiGetHand, apiSendToPlayArea, apiFetchLog, apiDiscardHand
 } from "./gameApi.js";
 import PrivatePlayArea from './PrivatePlayArea.jsx';
+import confirm from './ConfirmationDialog.jsx';
 import "./App.css";
 
 const Private = () => {
@@ -29,6 +30,11 @@ const Private = () => {
     setIsLogOpen(true);
   };
   const handleCloseLog = () => setIsLogOpen(false);
+  const handleDiscardHand =  async () => {
+    if (await confirm({ confirmation: 'Do you really want to discard your whole hand?' })) {
+      apiDiscardHand(gameGuid, setHand);
+    }
+  }
 
   // on mount
   useEffect(() => {
@@ -90,6 +96,7 @@ const Private = () => {
         tightenHandLayout={tightenHandLayout}
       />
       <button className="button" id="game-logs-button" onClick={handleCheckLog}>Game log</button>
+      <button className="button" id="discard-hand-button" onClick={handleDiscardHand}>Discard hand</button>
     </>
   );
 };

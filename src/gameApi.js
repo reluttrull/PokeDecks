@@ -57,9 +57,28 @@ export const apiDrawSpecificCard = (gameGuid, card, cardsInDeck, setCardsInDeck)
     if (response.status == 204) {
       card.attachedCards = [];
       card.damageCounters = 0;
-      console.log(card);
       setCardsInDeck(cardsInDeck.filter((c) => c.numberInDeck != card.numberInDeck));
     }
+  });
+  
+export const apiDrawSpecificCardFromDiscard = (gameGuid, card, discard, setDiscard) =>
+  fetch(`${BASE}/drawthiscardfromdiscard/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
+  }).then((response) => {
+    if (response.status == 204) {
+      card.attachedCards = [];
+      card.damageCounters = 0;
+      setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
+    }
+  });
+
+export const apiDiscardCard = (gameGuid, card) =>
+  fetch(`${BASE}/discardcard/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
   });
 
 export const apiSendToPlayArea = (gameGuid, card) =>
@@ -102,4 +121,11 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
         displayDateTime: new Date(log.timestamp).toLocaleString()
       }));
       setLogEntries(logEntries);
+    });
+
+    
+export const apiDiscardHand = (gameGuid, setHand) =>
+  fetch(`${BASE}/discardHand/${gameGuid}`)
+    .then((response) => {
+      if (response.status == 204) setHand([]);
     });
