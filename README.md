@@ -7,11 +7,11 @@ PokeTCG is an educational tool meant to aid in gameplay of the Pokemon Trading C
 
 
 <p align="center">
-<img width="900" alt="Screenshot 2025-11-04 094257" src="https://github.com/user-attachments/assets/a8925c5c-0caa-4b04-9862-ae9ab5d6fa5a" />
-<img width="900" alt="Screenshot 2025-11-04 094415" src="https://github.com/user-attachments/assets/40f9d59a-f980-4ab1-afce-14e504ad097b" />
-<img width="500" alt="Screenshot_20251104-094422" src="https://github.com/user-attachments/assets/e394c080-902d-4332-a1bc-6f6e831262bd" />
-<img width="900" alt="Screenshot 2025-11-04 094611" src="https://github.com/user-attachments/assets/1a31929a-0d6e-4649-9b3b-fac322d98fba" />
-<img width="500" alt="Screenshot_20251104-094542" src="https://github.com/user-attachments/assets/01a1533c-4b36-4126-8a6c-37fabdf93660" />
+<img width="890" alt="landing page" src="https://github.com/user-attachments/assets/96634da1-a034-47ff-b1ea-1befd2f974f9" />
+<img width="890" alt="public play area 1" src="https://github.com/user-attachments/assets/eb54fda5-60f3-4891-ac93-36dd62b224b3" />
+<img width="500" alt="private play area 1" src="https://github.com/user-attachments/assets/e55603cd-5ddd-42cf-afde-ae137262470e" />
+<img width="890" alt="public play area 2" src="https://github.com/user-attachments/assets/0359530f-1c00-4f03-9f8b-cea27a939c21" />
+<img width="500" alt="private play area 2" src="https://github.com/user-attachments/assets/63431be7-6970-422c-b551-d45f4700427a" />
 </p>
 
 
