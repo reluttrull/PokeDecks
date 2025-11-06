@@ -91,11 +91,10 @@ const Private = () => {
         onRequestClose={handleCloseLog}
       >
         {logEntries && logEntries.map((log) => (
-          <div style={{color:'black'}}
+          <div className="log-item"
               key={"log-" + log.timestamp}>
             <div>
-              <span><strong>{log.name}</strong></span><span style={{paddingLeft:'20px'}}>{log.displayDateTime}</span>
-            <hr />
+              <span><strong>{log.name}</strong></span><span style={{float:'right'}}><em>{log.displayDateTime}</em></span>
             </div>
             <div>
               {log.involvedCards && log.involvedCards.map((card) => (
@@ -103,7 +102,10 @@ const Private = () => {
                   key={`log-${log.timestamp}-${card.numberInDeck}`}
                   src={`${card.image}/low.webp`} className="tiny-card-size" />
               ))}
+              {log.eventType == 504 && <img src="/pokeclient/coinHeads.png" className="tiny-coin-size" />}
+              {log.eventType == 505 && <img src="/pokeclient/coinTails.png" className="tiny-coin-size" />}
             </div>
+            <hr />
           </div>
         ))}
         <button style={{marginTop:'20px'}} onClick={handleCloseLog}>Done</button>
