@@ -73,6 +73,11 @@ const Private = () => {
     })
     .catch((err) => console.error("Connection failed: ", err));
 
+    connection.onreconnected(() => {
+      console.log("Reconnected, rejoining group...");
+      connection.invoke("JoinGameGroup", gameGuid);
+    });
+
     return () => {
         connection.stop();
     };
