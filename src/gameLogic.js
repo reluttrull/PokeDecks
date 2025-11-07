@@ -1,5 +1,7 @@
 // logic helper functions
-import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard } from "./gameApi.js";
+import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard,
+    apiMoveToActive, apiMoveToBench,
+    apiSwapActiveWithBench, apiAttachCard } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // must be a Pokemon card
@@ -11,9 +13,9 @@ function allowedToBeInEmptySpot(card) {
   return false;
 }
 
-export function initializeGame(deckNumber, gameGuid) { //setHand, mulligans) {
+export function initializeGame(deckNumber, gameGuid) {
   fetch(
-    `https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net//game/getnewgame/${deckNumber}`
+    `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -36,6 +38,7 @@ export async function placeCardInSpot({
   const { hand, active, bench, discard } = state;
   const { setHand, setActive, setBench, setDiscard } = setState;
   const { attachOrSwapCard, apiReturnToDeck } = helpers;
+  let guid = !gameGuid ? gameGuid.current : gameGuid;
 
   switch (spot) {
     case -2: // real hand: dropped in public bottom zone
@@ -44,18 +47,9 @@ export async function placeCardInSpot({
           ...c,
           damageCounters: 0,
         }));
-        handattached.forEach(c => apiSendToHand(gameGuid, c));
+        handattached.forEach(c => apiSendToHand(guid, c));
       }
-      card.attachedCards = [];
-      card.damageCounters = 0;
-      if (hand.includes(card)) 
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck)); // remove from temp hand
-      else if (active && active.numberInDeck == card.numberInDeck) setActive(null);
-      else if (bench.includes(card)) 
-        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (bench.includes(card)) 
-        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      apiSendToHand(gameGuid, card);
+      apiSendToHand(guid, card);
       break;
     case -1: // temp hand: dropped in private top zone
       console.log(isPublicCaller, hand, card);
@@ -67,19 +61,15 @@ export async function placeCardInSpot({
       break;
     case 0:
       if (active) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(gameGuid, card, true);
+        let attachedOk = await attachOrSwapCard(guid, card, true);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card)) {
           return; // placed in an empty spot but not allowed to be
         }
-        setActive(card);
+        let attached = card.attachedCards;
+        apiMoveToActive(guid, card);
       }
-      // remove from wherever it came from
-      if (bench.includes(card))
-        setBench(bench.filter((c) => c.numberInDeck != card.numberInDeck));
-      else if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 1:
@@ -89,45 +79,27 @@ export async function placeCardInSpot({
     case 5:
       const idx = spot - 1;
       if (bench.length > idx && bench[idx]) { // placed in occupied spot, try to attach or swap
-        let attachedOk = await attachOrSwapCard(gameGuid, card, false, idx);
+        let attachedOk = await attachOrSwapCard(guid, card, false, idx);
         if (!attachedOk) return;
       } else {
         if (!allowedToBeInEmptySpot(card))
           return; // placed in an empty spot but not allowed to be
-        setBench([...bench, card]);
+        apiMoveToBench(guid, card);
+
       }
-      // remove from wherever it came from
-      if (active && active.numberInDeck == card.numberInDeck)
-        setActive(null);
-      else if (bench.includes(card)) setBench([...new Set(bench)]);
-      else if (hand.includes(card))
-        setHand(hand.filter((c) => c.numberInDeck != card.numberInDeck));
       break;
 
     case 6:
-      card.attachedCards.forEach((c) => apiDiscardCard(gameGuid, c));
-      let newDiscard = [...card.attachedCards, ...discard];
-      card.attachedCards = [];
-      newDiscard = [card, ...newDiscard];
-      apiDiscardCard(gameGuid, card);
-      setDiscard(newDiscard);
-      removeCard(card, { hand, active, bench, setHand, setActive, setBench });
+      console.log(card);
+      card.attachedCards.forEach((c) => apiDiscardCard(guid, c));
+      apiDiscardCard(guid, card);
       break;
 
     case 7:
-      card.attachedCards.forEach((c) => apiReturnToDeck(c, gameGuid));
-      apiReturnToDeck(card, gameGuid);
-      removeCard(card, { hand, active, bench, setHand, setActive, setBench });
+      card.attachedCards.forEach((c) => apiReturnToDeck(c, guid));
+      apiReturnToDeck(card, guid);
       break;
   }
-}
-
-export function removeCard(cardToRemove, { hand, active, bench, setHand, setActive, setBench }) {
-  if (hand.includes(cardToRemove))
-    setHand(hand.filter((c) => c.numberInDeck != cardToRemove.numberInDeck));
-  else if (bench.includes(cardToRemove))
-    setBench(bench.filter((c) => c.numberInDeck != cardToRemove.numberInDeck));
-  else if (active?.numberInDeck == cardToRemove.numberInDeck) setActive(null);
 }
 
 export function tightenHandLayoutLogic(hand, setHand, setRerenderKey) {
@@ -147,7 +119,7 @@ function shouldAttachAsEnergy(baseCard, cardToAttach) {
 }
 
 export async function attachOrSwapCard(
-  gameGuid,
+  guid,
   cardToAttach,
   isActive,
   benchPosition = -1,
@@ -156,7 +128,6 @@ export async function attachOrSwapCard(
 ) {
   const { hand, active, bench, discard } = state;
   const { setHand, setActive, setBench, setDiscard } = setState;
-  let guid = !gameGuid ? gameGuid.current : gameGuid;
 
   // handle Pokémon Breeder evolution shortcut
   if (cardToAttach.name == "Pokémon Breeder") {
@@ -175,49 +146,34 @@ export async function attachOrSwapCard(
     // evolution logic
     if (isActive) {
       stageTwo.attachedCards = [...active.attachedCards, active];
-      stageTwo.damageCounters = active.damageCounters;
-      setActive(stageTwo);
+      apiMoveToActive(guid, stageTwo);
     } else {
       stageTwo.attachedCards = [
         ...bench[benchPosition].attachedCards,
         bench[benchPosition],
       ];
-      stageTwo.damageCounters = bench[benchPosition].damageCounters;
-      const newBench = bench.map((c, i) =>
-        i == benchPosition ? stageTwo : c
-      );
-      setBench(newBench);
+      apiMoveToBench(guid, stageTwo);
     }
-
-    // remove stage two and trainer card from hand...
-    setHand(
-      hand.filter((c) =>
-          c.numberInDeck != stageTwo.numberInDeck &&
-          c.numberInDeck != cardToAttach.numberInDeck)
-    );
-    // ...and discard Pokémon Breeder
-    setDiscard([...discard, cardToAttach]);
+    // discard Pokémon Breeder
+    apiDiscardCard(guid, cardToAttach);
     return false;
   }
 
   if (isActive) {
     if (shouldAttachAsEnergy(active, cardToAttach)) { // attach energy?
       // handle Electrode Buzzap power
-      setDiscard([...cardToAttach.attachedCards, ...discard]);
-      cardToAttach.attachedCards = [];
-      active.attachedCards.push(cardToAttach);
+      cardToAttach.attachedCards.forEach(c => apiDiscardCard(guid, c));
+      apiAttachCard(guid, cardToAttach, active);
     } else if (hand.includes(cardToAttach) &&
       cardToAttach.evolveFrom == active.name) { // evolve?
-      const attached = active.attachedCards;
+      cardToAttach.attachedCards = active.attachedCards;
       active.attachedCards = [];
-      cardToAttach.attachedCards = [...attached, active];
-      cardToAttach.damageCounters = active.damageCounters;
-      setActive(cardToAttach);
+      cardToAttach.attachedCards.push(active);
+      apiMoveToActive(guid, cardToAttach);
     } else if (bench.includes(cardToAttach)) { // swap with bench?
       const newActive = cardToAttach;
-      const newBench = bench.filter((c) => c.numberInDeck != newActive.numberInDeck).concat(active);
-      setBench(newBench);
-      setActive(newActive);
+      const newBench = active;
+      apiSwapActiveWithBench(guid, newActive, newBench);
       return false;
     } else return false;
 
@@ -226,21 +182,18 @@ export async function attachOrSwapCard(
 
   if (shouldAttachAsEnergy(bench[benchPosition], cardToAttach)) { // attach energy?
     // handle Electrode Buzzap power
-    setDiscard([...cardToAttach.attachedCards, ...discard]);
+    cardToAttach.attachedCards.forEach(c => apiDiscardCard(guid, c));
     cardToAttach.attachedCards = [];
-    bench[benchPosition].attachedCards.push(cardToAttach);
+    apiAttachCard(guid, cardToAttach, bench[benchPosition]);
   } else if (hand.includes(cardToAttach) &&
     cardToAttach.evolveFrom == bench[benchPosition].name) { // evolve?
-    const attached = bench[benchPosition].attachedCards;
+    let evolved = cardToAttach;
+    evolved.attachedCards = bench[benchPosition].attachedCards;
     bench[benchPosition].attachedCards = [];
-    cardToAttach.attachedCards = [...attached, bench[benchPosition]];
-    cardToAttach.damageCounters = bench[benchPosition].damageCounters;
-    const newBench = bench.map((c, i) => i == benchPosition ? cardToAttach : c);
-    setBench(newBench);
+    evolved.attachedCards.push(bench[benchPosition]);
+    apiMoveToBench(guid, evolved);
   } else if (active == cardToAttach) { // swap with active?
-    setActive(bench[benchPosition]);
-    const newBench = bench.map((c, i) => i == benchPosition ? cardToAttach : c);
-    setBench(newBench);
+      apiSwapActiveWithBench(guid, bench[benchPosition], cardToAttach);
     return false;
   } else return false;
 
