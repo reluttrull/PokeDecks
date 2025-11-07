@@ -47,11 +47,11 @@ const Public = () => {
     card: data.card,
     spot: data.pos,
     isPublicCaller: true,
-    state: { hand: temphand, active, bench, discard },
-    setState: { setHand: setTemphand, setActive, setBench, setDiscard },
+    state: { hand: temphand, active, bench },
+    setState: { setHand: setTemphand },
     helpers: {
         attachOrSwapCard: (gameGuid, card, isActive, benchPos) =>
-        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench, discard }, { setHand: setTemphand, setActive, setBench, setDiscard }),
+        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench }),
         apiReturnToDeck,
     },
     gameGuid,

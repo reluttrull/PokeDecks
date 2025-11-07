@@ -35,8 +35,8 @@ export async function placeCardInSpot({
   helpers,
   gameGuid,
 }) {
-  const { hand, active, bench, discard } = state;
-  const { setHand, setActive, setBench, setDiscard } = setState;
+  const { hand, active, bench } = state;
+  const { setHand } = setState;
   const { attachOrSwapCard, apiReturnToDeck } = helpers;
   let guid = !gameGuid ? gameGuid.current : gameGuid;
 
@@ -123,11 +123,9 @@ export async function attachOrSwapCard(
   cardToAttach,
   isActive,
   benchPosition = -1,
-  state,
-  setState
+  state
 ) {
-  const { hand, active, bench, discard } = state;
-  const { setHand, setActive, setBench, setDiscard } = setState;
+  const { hand, active, bench } = state;
 
   // handle Pokémon Breeder evolution shortcut
   if (cardToAttach.name == "Pokémon Breeder") {
@@ -163,6 +161,7 @@ export async function attachOrSwapCard(
     if (shouldAttachAsEnergy(active, cardToAttach)) { // attach energy?
       // handle Electrode Buzzap power
       cardToAttach.attachedCards.forEach(c => apiDiscardCard(guid, c));
+      cardToAttach.attachedCards = [];
       apiAttachCard(guid, cardToAttach, active);
     } else if (hand.includes(cardToAttach) &&
       cardToAttach.evolveFrom == active.name) { // evolve?
