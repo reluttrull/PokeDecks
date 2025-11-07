@@ -99,14 +99,14 @@ export const apiMoveToActive = (gameGuid, card) =>
   fetch(`${BASE}/movetoactive/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards }),
+    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards, damageCounters: card.damageCounters }),
   });
 
 export const apiMoveToBench = (gameGuid, card) =>
   fetch(`${BASE}/movetobench/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards }),
+    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards, damageCounters: card.damageCounters }),
   });
 
 export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
@@ -114,8 +114,8 @@ export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify([
-      { mainCard: card1, attachedCards: card1.attachedCards },
-      { mainCard: card2, attachedCards: card2.attachedCards }
+      { mainCard: card1, attachedCards: card1.attachedCards, damageCounters: card.damageCounters },
+      { mainCard: card2, attachedCards: card2.attachedCards, damageCounters: card.damageCounters }
     ]),
   });
 
@@ -156,7 +156,15 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
 
     
 export const apiDiscardHand = (gameGuid, setHand) =>
-  fetch(`${BASE}/discardhand/${gameGuid}`)
-    .then((response) => {
-      
-    });
+  fetch(`${BASE}/discardhand/${gameGuid}`);
+
+
+export const apiAddDamageCounters = (gameGuid, card, amount) =>
+  fetch(`${BASE}/adddamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
+    method: "PUT"
+  });
+  
+export const apiRemoveDamageCounters = (gameGuid, card, amount) =>
+  fetch(`${BASE}/removedamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
+    method: "PUT"
+  });

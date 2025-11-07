@@ -144,12 +144,14 @@ export async function attachOrSwapCard(
     // evolution logic
     if (isActive) {
       stageTwo.attachedCards = [...active.attachedCards, active];
+      stageTwo.damageCounters = active.damageCounters;
       apiMoveToActive(guid, stageTwo);
     } else {
       stageTwo.attachedCards = [
         ...bench[benchPosition].attachedCards,
         bench[benchPosition],
       ];
+      stageTwo.damageCounters = bench[benchPosition].damageCounters;
       apiMoveToBench(guid, stageTwo);
     }
     // discard Pokémon Breeder
@@ -168,6 +170,7 @@ export async function attachOrSwapCard(
       cardToAttach.attachedCards = active.attachedCards;
       active.attachedCards = [];
       cardToAttach.attachedCards.push(active);
+      cardToAttach.damageCounters = active.damageCounters;
       apiMoveToActive(guid, cardToAttach);
     } else if (bench.includes(cardToAttach)) { // swap with bench?
       const newActive = cardToAttach;
@@ -190,6 +193,7 @@ export async function attachOrSwapCard(
     evolved.attachedCards = bench[benchPosition].attachedCards;
     bench[benchPosition].attachedCards = [];
     evolved.attachedCards.push(bench[benchPosition]);
+    evolved.damageCounters = bench[benchPosition].damageCounters;
     apiMoveToBench(guid, evolved);
   } else if (active == cardToAttach) { // swap with active?
       apiSwapActiveWithBench(guid, bench[benchPosition], cardToAttach);

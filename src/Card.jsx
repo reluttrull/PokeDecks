@@ -7,7 +7,7 @@ import Damage from './Damage.jsx';
 import SpecialConditions from './SpecialConditions.jsx';
 import './App.css';
 
-const Card = ({data, startOffset, positionCallback, isPublic}) => {
+const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) => {
   const ref = useRef(null);
   const uuid = crypto.randomUUID();
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -111,11 +111,6 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
     setTranslateY(down ? movement.y : withSpring(0));
   });
 
-  function handleDamageChange(change) {
-    data.damageCounters += change;
-    setRerenderDmgKey((p) => p + 1);
-  }
-
   function handleEnergyDelete(cardName) {
     console.log(`deleting ${cardName} from this card`);
     let energyCard = null;
@@ -134,6 +129,10 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
     setAttachedEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.category == "Energy")
           .toSorted((a,b) => a.name - b.name));
+  }
+
+  function handleSendDmg(change) {
+    damageCallback({card:data, change:change});
   }
 
   useEffect(() => {
@@ -189,7 +188,7 @@ const Card = ({data, startOffset, positionCallback, isPublic}) => {
               offset={(attachedEnergy.length * 20) + (index * 40) + 20} deleteCallback={handleEnergyDelete} />
         </div>
       ))}
-      {data.category == "Pokemon" && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleDamageChange} />}
+      {data.category == "Pokemon" && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleSendDmg} />}
       {data.category == "Pokemon" && <SpecialConditions />}
     </animate.div>
     <Modal className="card-overlay-container"

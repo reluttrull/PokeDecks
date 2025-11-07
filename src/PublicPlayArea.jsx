@@ -9,7 +9,7 @@ import './App.css';
 const PublicPlayArea = ({
   temphand, bench, active, discard, prizes,
   numberInDeck, rerenderKey,
-  cardCallback,
+  cardCallback, damageCallback,
   drawPrize, handleSelectFromDiscard,
   handleSelectFromDeck, handleShuffle
 }) => {
@@ -21,13 +21,13 @@ const PublicPlayArea = ({
 
       {/* Active */}
       <div id="user-active" className="card-target">
-        {active && <PublicCard key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} />}
+        {active && <PublicCard key={active.numberInDeck} data={active} startOffset={0} positionCallback={cardCallback} damageCallback={damageCallback} />}
       </div>
 
       {/* Bench */}
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} id={`user-bench-${i + 1}`} className="card-target">
-          {bench.length > i && <PublicCard key={bench[i].numberInDeck} data={bench[i]} startOffset={0} positionCallback={cardCallback} />}
+          {bench.length > i && <PublicCard key={bench[i].numberInDeck} data={bench[i]} startOffset={0} positionCallback={cardCallback} damageCallback={damageCallback} />}
         </div>
       ))}
 
@@ -59,6 +59,7 @@ const PublicPlayArea = ({
             data={card}
             startOffset={index * 30}
             positionCallback={cardCallback}
+            damageCallback={damageCallback}
           />
         ))}
       </div>

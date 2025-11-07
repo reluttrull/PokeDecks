@@ -20,7 +20,8 @@ import {
   apiFetchCardsFromDeck,
   apiDrawSpecificCard,
   apiDrawSpecificCardFromDiscard,
-  apiSendToHand
+  apiAddDamageCounters,
+  apiRemoveDamageCounters
 } from "./gameApi.js";
 import "./App.css";
 
@@ -92,6 +93,10 @@ const Public = () => {
     apiDrawSpecificCardFromDiscard(gameGuid, card, discard, setDiscard);
     setDiscard(discard.filter((c) => c.numberInDeck != card.numberInDeck));
   };
+  const handleDamageChange = (data) => {
+    if (data.change > 0) apiAddDamageCounters(gameGuid, data.card, data.change);
+    else if (data.change < 0) apiRemoveDamageCounters(gameGuid, data.card, Math.abs(data.change));
+  };
 
   // on mount
   useEffect(() => {
@@ -120,7 +125,7 @@ const Public = () => {
         console.log("Message from SignalR hub: active card changed", message);
         if (message.mainCard) {
           message.mainCard.attachedCards = message.attachedCards.map(ac => { return { ...ac, attachedCards: [], damageCounters: 0 }});
-          message.mainCard.damageCounters = 0;
+          message.mainCard.damageCounters = message.damageCounters;
         }
         setActive(message.mainCard);
     });
@@ -130,7 +135,7 @@ const Public = () => {
         message.forEach(spot => {
           if (spot.mainCard) {
             spot.mainCard.attachedCards = spot.attachedCards.map(ac => { return { ...ac, attachedCards: [], damageCounters: 0 }});
-            spot.mainCard.damageCounters = 0;
+            spot.mainCard.damageCounters = spot.damageCounters;
             newBench.push(spot.mainCard);
           }
         });
@@ -207,6 +212,7 @@ const Public = () => {
             numberInDeck={numberInDeck}
             rerenderKey={rerenderKey}
             cardCallback={cardCallback}
+            damageCallback={handleDamageChange}
             drawPrize={drawPrize}
             handleSelectFromDiscard={handleSelectFromDiscard}
             handleDiscardHand={handleDiscardHand}
