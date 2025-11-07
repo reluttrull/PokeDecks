@@ -47,11 +47,11 @@ const Public = () => {
     card: data.card,
     spot: data.pos,
     isPublicCaller: true,
-    state: { hand: temphand, active, bench, discard },
-    setState: { setHand: setTemphand, setActive, setBench, setDiscard },
+    state: { hand: temphand, active, bench },
+    setState: { setHand: setTemphand },
     helpers: {
         attachOrSwapCard: (gameGuid, card, isActive, benchPos) =>
-        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench, discard }, { setHand: setTemphand, setActive, setBench, setDiscard }),
+        attachOrSwapCard(gameGuid, card, isActive, benchPos, { hand: temphand, active, bench }),
         apiReturnToDeck,
     },
     gameGuid,
@@ -98,19 +98,15 @@ const Public = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
+        .withUrl("https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
         .withAutomaticReconnect()
         .build();
 
     // receive messages from server
-    connection.on("CardAddedToPlayArea", (message) => {
-        console.log("Message from SignalR hub: card moved to play area", message);
-        message.damageCounters = 0;
-        message.attachedCards = [];
-        setTemphand(prevTemphand => [...prevTemphand, message]);
-    });
-    connection.on("CardMovedToHand", (message) => {
-        console.log("Message from SignalR hub: card returned to hand", message);
+    connection.on("TempHandChanged", (message) => {
+        console.log("Message from SignalR hub: temp hand changed", message);
+        let newTemphand = message.map(card => { return { ...card, attachedCards: [], damageCounters: 0 }});
+        setTemphand(newTemphand);
     });
     connection.on("DeckChanged", (message) => {
         console.log("Message from SignalR hub: number of cards in deck changed", message);
@@ -119,6 +115,26 @@ const Public = () => {
     connection.on("DiscardChanged", (message) => {
         console.log("Message from SignalR hub: discard pile changed", message);
         setDiscard(message);
+    });
+    connection.on("ActiveChanged", (message) => {
+        console.log("Message from SignalR hub: active card changed", message);
+        if (message.mainCard) {
+          message.mainCard.attachedCards = message.attachedCards.map(ac => { return { ...ac, attachedCards: [], damageCounters: 0 }});
+          message.mainCard.damageCounters = 0;
+        }
+        setActive(message.mainCard);
+    });
+    connection.on("BenchChanged", (message) => {
+        console.log("Message from SignalR hub: bench changed", message);
+        let newBench = [];
+        message.forEach(spot => {
+          if (spot.mainCard) {
+            spot.mainCard.attachedCards = spot.attachedCards.map(ac => { return { ...ac, attachedCards: [], damageCounters: 0 }});
+            spot.mainCard.damageCounters = 0;
+            newBench.push(spot.mainCard);
+          }
+        });
+        setBench(newBench);
     });
 
     // start connection

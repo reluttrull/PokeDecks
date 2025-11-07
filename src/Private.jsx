@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
 import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
-  apiGetHand, apiSendToPlayArea, apiFetchLog, apiDiscardHand
+  apiGetHand, apiSendToTempHand, apiFetchLog, apiDiscardHand
 } from "./gameApi.js";
 import PrivatePlayArea from './PrivatePlayArea.jsx';
 import confirm from './ConfirmationDialog.jsx';
@@ -22,7 +22,7 @@ const Private = () => {
   
   const cardCallback = (data) => {
     let card = data.card;
-    apiSendToPlayArea(gameGuid, card);
+    apiSendToTempHand(gameGuid, card);
     // may not need to do anything else here
   };
   const tightenHandLayout = () =>
@@ -45,20 +45,14 @@ const Private = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
+        .withUrl("https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
         .withAutomaticReconnect()
         .build();
 
     // receive messages from server
-    connection.on("CardAddedToPlayArea", (message) => {
-        console.log("Message from SignalR hub: card moved to play area", message);
-        setHand(prevHand => prevHand.filter(c => c.numberInDeck !== message.numberInDeck));
-    });
-    connection.on("CardMovedToHand", (message) => {
-        console.log("Message from SignalR hub: card returned to hand", message);
-        message.damageCounters = 0;
-        message.attachedCards = [];
-        setHand(prevHand => [...prevHand, message]);
+    connection.on("HandChanged", (message) => {
+        console.log("Message from SignalR hub: hand changed", message);
+        setHand(message);
     });
     connection.on("GameOver", () => {
       console.log("Message from SignalR hub: game over");

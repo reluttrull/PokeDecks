@@ -1,5 +1,5 @@
 // api helper functions
-const BASE = "https://pokeserverv2-age7btb6fwabhee2.canadacentral-01.azurewebsites.net/game";
+const BASE = "https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game";
 
 export const apiReturnToDeck = (card, gameGuid) =>
   fetch(`${BASE}/placecardonbottomofdeck/${gameGuid}`, {
@@ -81,8 +81,8 @@ export const apiDiscardCard = (gameGuid, card) =>
     body: JSON.stringify(card),
   });
 
-export const apiSendToPlayArea = (gameGuid, card) =>
-  fetch(`${BASE}/sendtoplayarea/${gameGuid}`, {
+export const apiSendToTempHand = (gameGuid, card) =>
+  fetch(`${BASE}/sendtotemphand/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
@@ -90,6 +90,37 @@ export const apiSendToPlayArea = (gameGuid, card) =>
 
 export const apiSendToHand = (gameGuid, card) =>
   fetch(`${BASE}/sendtohand/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
+  });
+
+export const apiMoveToActive = (gameGuid, card) =>
+  fetch(`${BASE}/movetoactive/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards }),
+  });
+
+export const apiMoveToBench = (gameGuid, card) =>
+  fetch(`${BASE}/movetobench/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards }),
+  });
+
+export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
+  fetch(`${BASE}/swapactivewithbench/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify([
+      { mainCard: card1, attachedCards: card1.attachedCards },
+      { mainCard: card2, attachedCards: card2.attachedCards }
+    ]),
+  });
+
+export const apiAttachCard = (gameGuid, card, attachedToCard) =>
+  fetch(`${BASE}/attachcard/${gameGuid}/${attachedToCard.numberInDeck}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
@@ -125,7 +156,7 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
 
     
 export const apiDiscardHand = (gameGuid, setHand) =>
-  fetch(`${BASE}/discardHand/${gameGuid}`)
+  fetch(`${BASE}/discardhand/${gameGuid}`)
     .then((response) => {
-      if (response.status == 204) setHand([]);
+      
     });

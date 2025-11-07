@@ -24,7 +24,7 @@ const Landing = () => {
   }
 
   function getCoinFlip() {
-    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/flipcoin`)
+    fetch(`https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/flipcoin/`)
     .then(response => response.json())
     .then(data => {
       console.log('flipped coin', data);
