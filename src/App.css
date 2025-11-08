@@ -125,10 +125,10 @@ ul {
 }
 
 #discard-select-button {
+  position: absolute;
   top: 60px;
   left: 150px;
   width: 180px;
-  background-color: rgba(20, 20, 20, 0.7);
 }
 
 #deck {
@@ -157,11 +157,16 @@ ul {
   background-color: rgba(58, 58, 92, 0.5);
 }
 
+.button {
+  position: absolute;
+  color: #fff;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
 #game-logs-button {
   top: 330px;
   left: 300px;
   width: 180px;
-  background-color: rgba(20, 20, 20, 0.7);
 }
 
 #discard-hand-button {
@@ -171,13 +176,16 @@ ul {
   background-color: rgba(200, 10, 10, 0.7);
 }
 
+#copy-url-button {
+  left: 0;
+  width: 100%;
+}
+
 #draw-card-button {
   position: absolute;
   top: 50px; 
   left: 920px;
   width: 120px;
-  color: #fff;
-  background-color: rgba(20, 20, 20, 0.7);
 }
 
 #flip-coin-button {
@@ -185,8 +193,6 @@ ul {
   top: 100px;
   left: 920px;
   width: 120px;
-  color: #fff;
-  background-color: rgba(20, 20, 20, 0.7);
 }
 
 #end-game-button {
@@ -200,8 +206,8 @@ ul {
 
 #deck-select-button {
   top: 20px;
+  left: 150px;
   width: 180px;
-  background-color: rgba(20, 20, 20, 0.7);
 }
 
 #number-in-deck-display {

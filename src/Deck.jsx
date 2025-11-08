@@ -33,7 +33,7 @@ const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
             </div>
         </div>
         <button id="deck-select-button" className="button" onClick={handleSelect}>Select from deck</button>
-        <button id="deck-shuffle-button" className={seenDeckOrder ? "button shuffle-reminder" : "button"} onClick={handleShuffle}>Shuffle</button>
+        <button id="deck-shuffle-button" className={seenDeckOrder ? "shuffle-button shuffle-reminder" : "shuffle-button"} onClick={handleShuffle}>Shuffle</button>
         <div id="number-in-deck-display">{displayNum}</div>
     </div>
     </>

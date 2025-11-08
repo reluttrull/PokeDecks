@@ -67,7 +67,7 @@ const Landing = () => {
           <br />
           </div>)}
           <br />
-          <button onClick={startGame}><IoIosTabletLandscape /><span style={{paddingLeft:'20px'}}>Start game</span></button>
+          <button className="button" onClick={startGame}><IoIosTabletLandscape /><span style={{paddingLeft:'20px'}}>Start game</span></button>
         </div>
       {coinResult != null && <CoinFlip isHeads={coinResult} />}
     </>
