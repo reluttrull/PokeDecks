@@ -8,7 +8,10 @@ import './App.css';
 const App = () => {
 
   function GameOver() {
-    return <h1>Game Over!</h1>
+    return <>
+             <h1>Game Over!</h1>
+             <a style={{float:'left'}} href="/">Start new game</a>
+           </>
   }
 
   return (
