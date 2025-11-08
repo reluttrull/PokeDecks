@@ -312,6 +312,12 @@ ul {
   overflow-y: auto;
 }
 
+.scrollable-full-modal {
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 
 @-webkit-keyframes spin {
 	100% {

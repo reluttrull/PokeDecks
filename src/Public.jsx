@@ -164,43 +164,36 @@ const Public = () => {
   return (
     <>
       {!loadingDone && <Loading />}
-
-      {isSelectingDeck && (
-        <Modal
-          className="card-overlay-container"
-          isOpen={isSelectingDeck}
-          onRequestClose={handleCloseSelectFromDeck}
-        >
-          {cardsInDeck.map((card) => (
-            <img
-              key={"deckselect" + card.numberInDeck}
-              onClick={() => addFromDeckToHand(card)}
-              src={`${card.image}/low.webp`} className="card-size icon-button" />
-          ))}
-          <button onClick={handleCloseSelectFromDeck}>
-            Done selecting cards
-          </button>
-        </Modal>
-      )}
-
-      {isSelectingDiscard && (
-        <Modal
-          className="card-overlay-container"
-          isOpen={isSelectingDiscard}
-          onRequestClose={handleCloseSelectFromDiscard}
-        >
-          {discard.map((card) => (
-            <img 
-            key={"discardselect" + card.numberInDeck}
-            onClick={() => addFromDiscardToHand(card)}
+      <Modal
+        className="card-overlay-container scrollable-full-modal"
+        isOpen={isSelectingDeck}
+        onRequestClose={handleCloseSelectFromDeck}
+      >
+        {cardsInDeck.map((card) => (
+          <img
+            key={"deckselect" + card.numberInDeck}
+            onClick={() => addFromDeckToHand(card)}
             src={`${card.image}/low.webp`} className="card-size icon-button" />
-          ))}
-          <button onClick={handleCloseSelectFromDiscard}>
-            Done selecting cards
-          </button>
-        </Modal>
-      )}
-
+        ))}
+        <button onClick={handleCloseSelectFromDeck}>
+          Done selecting cards
+        </button>
+      </Modal>
+      <Modal
+        className="card-overlay-container scrollable-full-modal"
+        isOpen={isSelectingDiscard}
+        onRequestClose={handleCloseSelectFromDiscard}
+      >
+        {discard.map((card) => (
+          <img 
+          key={"discardselect" + card.numberInDeck}
+          onClick={() => addFromDiscardToHand(card)}
+          src={`${card.image}/low.webp`} className="card-size icon-button" />
+        ))}
+        <button onClick={handleCloseSelectFromDiscard}>
+          Done selecting cards
+        </button>
+      </Modal>
       {loadingDone && (
         <>
           <PublicPlayArea

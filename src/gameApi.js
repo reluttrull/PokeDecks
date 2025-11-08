@@ -114,8 +114,8 @@ export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify([
-      { mainCard: card1, attachedCards: card1.attachedCards, damageCounters: card.damageCounters },
-      { mainCard: card2, attachedCards: card2.attachedCards, damageCounters: card.damageCounters }
+      { mainCard: card1, attachedCards: card1.attachedCards, damageCounters: card1.damageCounters },
+      { mainCard: card2, attachedCards: card2.attachedCards, damageCounters: card2.damageCounters }
     ]),
   });
 
