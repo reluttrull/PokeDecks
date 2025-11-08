@@ -135,6 +135,12 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
     damageCallback({card:data, change:change});
   }
 
+  function isTreatedAsPokemon() {
+    if (data.category == "Pokemon") return true;
+    if (data.name == "Clefairy Doll") return true;
+    return false;
+  }
+
   useEffect(() => {
     if (!data.attachedCards) return;
     setAttachedEnergy(data.attachedCards
@@ -188,8 +194,8 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
               offset={(attachedEnergy.length * 20) + (index * 40) + 20} deleteCallback={handleEnergyDelete} />
         </div>
       ))}
-      {data.category == "Pokemon" && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleSendDmg} />}
-      {data.category == "Pokemon" && <SpecialConditions />}
+      {isTreatedAsPokemon && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleSendDmg} />}
+      {isTreatedAsPokemon && <SpecialConditions />}
     </animate.div>
     <Modal className="card-overlay-container"
         isOpen={modalIsOpen}

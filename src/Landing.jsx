@@ -4,7 +4,7 @@ import { IoIosTabletLandscape, IoIosPhoneLandscape } from 'react-icons/io';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
 import './App.css';
-import { apiGetAllDeckBriefs } from './deckApi.js';
+import { apiGetPublicDeckBriefs, apiGetAllDeckBriefs } from './deckApi.js';
 import { initializeGame } from './gameLogic.js';
 
 const Landing = () => {
@@ -41,7 +41,7 @@ const Landing = () => {
   
   // on mount
   useEffect(() => {
-    apiGetAllDeckBriefs(setDeckBriefs);
+    apiGetPublicDeckBriefs(setDeckBriefs);
   }, []);
 
   return (

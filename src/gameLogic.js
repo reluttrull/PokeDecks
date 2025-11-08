@@ -4,6 +4,8 @@ import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard,
     apiSwapActiveWithBench, apiAttachCard } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
+  // Clefairy Doll loophole
+  if (card.name == "Clefairy Doll") return true;
   // must be a Pokemon card
   if (card.category != "Pokemon") return false;
   // always allow basics
