@@ -19,7 +19,9 @@ const Landing = () => {
     initializeGame(deckNum, gameGuid);
     setTimeout(() => {
       setCoinResult(null);
-      navigate(`/public/${gameGuid.current}`);
+      let url = '/public/';
+      url += gameGuid.current;
+      navigate(url);
     }, 5000);
   }
 
