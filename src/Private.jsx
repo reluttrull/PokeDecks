@@ -52,7 +52,7 @@ const Private = () => {
     // receive messages from server
     connection.on("HandChanged", (message) => {
         console.log("Message from SignalR hub: hand changed", message);
-        setHand(message);
+        tightenHandLayoutLogic(message, setHand, setRerenderKey); // set once, in the correct order
     });
     connection.on("GameOver", () => {
       console.log("Message from SignalR hub: game over");
