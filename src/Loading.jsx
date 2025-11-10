@@ -4,7 +4,8 @@ import './App.css';
 
 const Loading = () => {
   const [obj, setObj] = useValue({ x: 0, y: 0, width: 100, height: 100 });
-  const energyImages = ['/pokeclient/Fighting.png', '/pokeclient/Lightning.png', '/pokeclient/Water.png', '/pokeclient/Colorless.png'];
+  const energyImages = ['/pokeclient/Fighting.png', '/pokeclient/Lightning.png', '/pokeclient/Water.png', '/pokeclient/Colorless.png',
+    '/pokeclient/Grass.png', '/pokeclient/Fire.png', '/pokeclient/Psychic.png'];
 
   let index = Math.floor(Math.random() * energyImages.length);
   let url = energyImages[index];
