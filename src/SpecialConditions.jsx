@@ -3,7 +3,7 @@ import { GiPoisonBottle, GiNightSleep, GiElectricalCrescent } from 'react-icons/
 import { ImConfused } from 'react-icons/im';
 import './App.css';
 
-const SpecialConditions = ({conditions, conditionsCallback}) => {
+const SpecialConditions = () => {
     const [isPoisoned, setIsPoisoned] = useState(false);
     const [isAsleep, setIsAsleep] = useState(false);
     const [isParalyzed, setIsParalyzed] = useState(false);
