@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { FaClipboard } from 'react-icons/fa6';
 import { IoIosTabletLandscape, IoIosPhoneLandscape } from 'react-icons/io';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
@@ -89,13 +90,14 @@ const Landing = () => {
           <li><IoIosPhoneLandscape style={{paddingRight:'10px'}} />one small device to manage your hand<br />
               (e.g. phone or small tablet)</li>
           </ul>
-          <label class="switch">
-            <input type="checkbox" value={useCustomDeck} onClick={toggleUseCustomDeck} />
-            <span class="slider round"></span>
-          </label>
+          <div>
+            <label className="switch" alt="use custom deck" title="Use custom deck">
+              <input type="checkbox" value={useCustomDeck} onClick={toggleUseCustomDeck} />
+              <span className="slider round"></span>
+            </label>
+          </div>
           {!useCustomDeck &&
-            <><h3>Choose your deck:</h3>
-
+            <><h3>Choose a standard deck</h3>
             {deckBriefs && deckBriefs.map(brief => 
               <div key={brief.deckId}>
                 <input type="radio" id={brief.name} value={brief.deckId} checked={deckNum == brief.deckId} onChange={handleDeckNumChange} />
@@ -108,9 +110,9 @@ const Landing = () => {
           }
           {useCustomDeck &&
             <>
-              <h3>Import your own from clipboard <small>(build one <a href="https://my.limitlesstcg.com/builder">here</a>):</small></h3>
+              <h3>Import a custom deck from clipboard <small>(build one <a href="https://my.limitlesstcg.com/builder">here</a>)</small></h3>
               <pre>{clipboardText}</pre>
-              <button onClick={handleReadClipboard}>Import</button>
+              <button onClick={handleReadClipboard}><FaClipboard style={{paddingRight:'10px'}} /> Import</button>
               <br />
             </>
           }
