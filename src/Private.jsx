@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from "react-modal";
 import { useParams, useNavigate } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";

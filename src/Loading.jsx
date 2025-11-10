@@ -18,9 +18,7 @@ const Loading = () => {
         ]),
         10,
         {
-            onStart() {
-                console.log('loading animation started');
-            }
+            onStart() { console.log('loading animation started'); }
         }
     )
 );

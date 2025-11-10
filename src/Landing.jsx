@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaCircleInfo } from 'react-icons/fa6';
 import { IoIosTabletLandscape, IoIosPhoneLandscape } from 'react-icons/io';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';

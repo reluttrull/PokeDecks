@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { animate, useValue } from 'react-ui-animate';
 import confirm from './ConfirmationDialog.jsx';
 import './App.css';
