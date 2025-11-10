@@ -45,7 +45,7 @@ const Private = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/notifications") // Adjust to your backend URL
+        .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/notifications`)
         .withAutomaticReconnect()
         .build();
 

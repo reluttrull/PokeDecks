@@ -17,7 +17,7 @@ function allowedToBeInEmptySpot(card) {
 
 export function initializeGame(deckNumber, gameGuid) {
   fetch(
-    `https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net/game/getnewgame/${deckNumber}`
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/getnewgame/${deckNumber}`
   )
     .then((response) => response.json())
     .then((data) => {
