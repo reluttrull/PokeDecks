@@ -17,6 +17,7 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
   const [mockEnergy, setMockEnergy] = useState([]);
   const [rerenderEnergyKey, setRerenderEnergyKey] = useState(0);
   const [rerenderDmgKey, setRerenderDmgKey] = useState(0);
+  let slowMotion = 15;
 
   let urlstring = `url('${data.image}/low.webp')`;
   let hqurlstring = `${data.image}/high.webp`;
@@ -51,8 +52,8 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
 
       if (!down) {
         positionCallback({ card: data, pos: -1 });
-        setTranslateX(withSpring(startOffset));
-        setTranslateY(withSpring(0));
+        setTranslateX(withSpring(startOffset, {stiffness: slowMotion}));
+        setTranslateY(withSpring(0, {stiffness: slowMotion}));
       }
       return true;
     }
@@ -67,8 +68,8 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
 
       if (!down) {
         positionCallback({ card: data, pos: -2 });
-        setTranslateX(withSpring(startOffset));
-        setTranslateY(withSpring(0));
+        setTranslateX(withSpring(startOffset, {stiffness: slowMotion}));
+        setTranslateY(withSpring(0, {stiffness: slowMotion}));
       }
       return true;
     }
@@ -96,8 +97,8 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
         setTranslateY(down ? movement.y : withSpring(target.top)); 
         if (!down) {
           positionCallback({ card: data, pos: target.position});
-          setTranslateX(withSpring(startOffset));
-          setTranslateY(withSpring(0));
+          setTranslateX(withSpring(startOffset, {stiffness: slowMotion}));
+          setTranslateY(withSpring(0, {stiffness: slowMotion}));
         }
         return;
       }
