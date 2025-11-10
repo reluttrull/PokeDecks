@@ -155,7 +155,7 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
     });
 
     
-export const apiDiscardHand = (gameGuid, setHand) =>
+export const apiDiscardHand = (gameGuid) =>
   fetch(`${BASE}/discardhand/${gameGuid}`);
 
 

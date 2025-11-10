@@ -34,7 +34,7 @@ const Private = () => {
   const handleCloseLog = () => setIsLogOpen(false);
   const handleDiscardHand =  async () => {
     if (await confirm({ confirmation: 'Do you really want to discard your whole hand?' })) {
-      apiDiscardHand(gameGuid, setHand);
+      apiDiscardHand(gameGuid);
     }
   }
 
