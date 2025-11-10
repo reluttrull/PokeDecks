@@ -23,9 +23,39 @@ export function initializeGame(deckNumber, gameGuid) {
     .then((data) => {
       if (!data) throw "Game data empty!";
       if (data.gameGuid) gameGuid.current = data.gameGuid;
-      // TODO: display mulligans
     })
     .catch((err) => console.error("Error fetching game start:", err));
+}
+
+export function initializeGameCustomDeck(deckGuid, gameGuid) {
+  fetch(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/getnewgamefromimporteddeck/${deckGuid}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data) throw "Game data empty!";
+      if (data.gameGuid) gameGuid.current = data.gameGuid;
+    })
+    .catch((err) => console.error("Error fetching game start:", err));
+}
+
+export async function importCustomDeck(decklist) {
+  try {
+    const resp = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/deck/importdeck/`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(decklist),
+    });
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(`Import failed: ${resp.status} ${txt}`);
+    }
+    const deckGuid = await resp.json();
+    return deckGuid;
+  } catch (err) {
+    console.error("Error importing decklist:", err);
+    throw err;
+  }
 }
 
 export async function placeCardInSpot({

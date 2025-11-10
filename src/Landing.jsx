@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
 import './App.css';
 import { apiGetPublicDeckBriefs, apiGetAllDeckBriefs } from './deckApi.js';
-import { initializeGame } from './gameLogic.js';
+import { initializeGame, importCustomDeck, initializeGameCustomDeck } from './gameLogic.js';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -12,10 +12,41 @@ const Landing = () => {
   const [deckBriefs, setDeckBriefs] = useState([]);
   const [deckNum, setDeckNum] = useState("0");
   const [coinResult, setCoinResult] = useState(null);
+  const [clipboardText, setClipboardText] = useState("");
+  const [error, setError] = useState("");
+  const [useCustomDeck, setUseCustomDeck] = useState(false);
 
-  function startGame() {
+  async function handleReadClipboard() {
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        setError("Clipboard API is not supported in this browser.");
+        return;
+      }
+
+      const text = await navigator.clipboard.readText();
+      setClipboardText(text);
+      setError("");
+    } catch (err) {
+      setError("Failed to read clipboard. Permission denied or no text available.");
+      console.error(err);
+    }
+  };
+
+  async function startGame() {
     getCoinFlip();
-    initializeGame(deckNum, gameGuid);
+    if (!useCustomDeck) {
+      initializeGame(deckNum, gameGuid);
+    } else {
+      try {
+        const deckGuid = await importCustomDeck(clipboardText); // returns deck guid string
+        if (!deckGuid) throw new Error('No deck id returned from import');
+        await initializeGameCustomDeck(deckGuid, gameGuid);
+      } catch (err) {
+        console.error('Import/init failed', err);
+        setError('Failed to import or initialize custom deck');
+        return;
+      }
+    }
     setTimeout(() => {
       setCoinResult(null);
       let url = '/public/';
@@ -37,6 +68,10 @@ const Landing = () => {
   function handleDeckNumChange(event) {
     setDeckNum(event.target.value);
   }
+
+  function toggleUseCustomDeck() {
+    setUseCustomDeck(!useCustomDeck);
+  }
   
   // on mount
   useEffect(() => {
@@ -54,17 +89,31 @@ const Landing = () => {
           <li><IoIosPhoneLandscape style={{paddingRight:'10px'}} />one small device to manage your hand<br />
               (e.g. phone or small tablet)</li>
           </ul>
+          <label class="switch">
+            <input type="checkbox" value={useCustomDeck} onClick={toggleUseCustomDeck} />
+            <span class="slider round"></span>
+          </label>
+          {!useCustomDeck &&
+            <><h3>Choose your deck:</h3>
 
-          <h3>Choose your deck:</h3>
-
-          {deckBriefs && deckBriefs.map(brief => 
-          <div key={brief.deckId}>
-            <input type="radio" id={brief.name} value={brief.deckId} checked={deckNum == brief.deckId} onChange={handleDeckNumChange} />
-            <label htmlFor={brief.name}>
-              <strong>{brief.name}</strong> : {brief.description}
-            </label>
-          <br />
-          </div>)}
+            {deckBriefs && deckBriefs.map(brief => 
+              <div key={brief.deckId}>
+                <input type="radio" id={brief.name} value={brief.deckId} checked={deckNum == brief.deckId} onChange={handleDeckNumChange} />
+                <label htmlFor={brief.name}>
+                  <strong>{brief.name}</strong> : {brief.description}
+                </label>
+              <br />
+              </div>)
+            }</>
+          }
+          {useCustomDeck &&
+            <>
+              <h3>Import your own from clipboard <small>(build one <a href="https://my.limitlesstcg.com/builder">here</a>):</small></h3>
+              <pre>{clipboardText}</pre>
+              <button onClick={handleReadClipboard}>Import</button>
+              <br />
+            </>
+          }
           <br />
           <button className="button" onClick={startGame}><IoIosTabletLandscape /><span style={{paddingLeft:'20px'}}>Start game</span></button>
         </div>
