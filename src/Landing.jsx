@@ -111,6 +111,7 @@ const Landing = () => {
           {useCustomDeck &&
             <>
               <h3>Import a custom deck from clipboard <small>(build one <a href="https://my.limitlesstcg.com/builder">here</a>)</small></h3>
+              <em>Experimental - only Base 1 and Jungle sets fully supported</em>
               <pre>{clipboardText}</pre>
               <button onClick={handleReadClipboard}><FaClipboard style={{paddingRight:'10px'}} /> Import</button>
               <br />
