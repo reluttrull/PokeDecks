@@ -10,7 +10,7 @@ const App = () => {
   function GameOver() {
     return <>
              <h1>Game Over!</h1>
-             <a style={{float:'left'}} href="/">Start new game</a>
+             <a style={{float:'left'}} href="/pokeclient/">Start new game</a>
            </>
   }
 
