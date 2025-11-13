@@ -5,7 +5,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     define: {
-      'process.env': env,
+      'process.env.REACT_APP_SERVER_BASE_URL': JSON.stringify(env.REACT_APP_SERVER_BASE_URL),
     },
     plugins: [react()],
   base: '/pokeclient/',
