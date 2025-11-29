@@ -7,8 +7,8 @@ import Deck from './Deck.jsx';
 import './App.css';
 
 const PublicPlayArea = ({
-  temphand, bench, active, discard, prizes,
-  numberInDeck, rerenderKey,
+  temphand, bench, active, discard, stadium,
+  prizes, numberInDeck, rerenderKey,
   cardCallback, damageCallback,
   drawPrize, handleSelectFromDiscard,
   handleSelectFromDeck, handleShuffle
@@ -30,6 +30,10 @@ const PublicPlayArea = ({
           {bench.length > i && <PublicCard key={bench[i].numberInDeck} data={bench[i]} startOffset={0} positionCallback={cardCallback} damageCallback={damageCallback} />}
         </div>
       ))}
+
+      <div id="stadium-area" className="card-target">
+        {stadium && <PublicCard key={stadium.numberInDeck} data={stadium} startOffset={0} positionCallback={cardCallback} />}
+      </div>
 
       {/* Discard */}
       <div id="discard-area" className="card-target">

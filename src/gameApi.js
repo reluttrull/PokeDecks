@@ -1,12 +1,20 @@
 // api helper functions
 const BASE = `${process.env.REACT_APP_SERVER_BASE_URL}/game`;
 
-export const apiReturnToDeck = (card, gameGuid) =>
+export const apiReturnToDeck = (gameGuid, card) =>
   fetch(`${BASE}/placecardonbottomofdeck/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   }).catch((error) => console.error("Return to deck failed:", error));
+
+  
+export const apiMoveToStadium = (gameGuid, card) =>
+  fetch(`${BASE}/movetostadium/${gameGuid}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(card),
+  }).catch((error) => console.error("Move card to stadium failed:", error));
 
 export const apiDrawPrize = (gameGuid, setPrizes, prizeNum, callback) =>
   fetch(`${BASE}/drawcardfromprizes/${gameGuid}`)

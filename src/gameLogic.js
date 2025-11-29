@@ -1,7 +1,7 @@
 // logic helper functions
 import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard,
     apiMoveToActive, apiMoveToBench,
-    apiSwapActiveWithBench, apiAttachCard } from "./gameApi.js";
+    apiSwapActiveWithBench, apiAttachCard, apiMoveToStadium } from "./gameApi.js";
 
 function allowedToBeInEmptySpot(card) {
   // Clefairy Doll loophole
@@ -129,7 +129,12 @@ export async function placeCardInSpot({
 
     case 7:
       card.attachedCards.forEach((c) => apiReturnToDeck(c, guid));
-      apiReturnToDeck(card, guid);
+      apiReturnToDeck(guid, card);
+      break;
+
+    case 8:
+      console.log(`moving ${card.name} to stadium`);
+      apiMoveToStadium(guid, card);
       break;
   }
 }

@@ -33,6 +33,7 @@ const Public = () => {
   const [active, setActive] = useState(null);
   const [bench, setBench] = useState([]);
   const [discard, setDiscard] = useState([]);
+  const [stadium, setStadium] = useState(null);
   const [prizes, setPrizes] = useState([0, 3, 1, 4, 2, 5]);
   const [coinResult, setCoinResult] = useState(null);
   const [isSelectingDeck, setIsSelectingDeck] = useState(false);
@@ -141,6 +142,13 @@ const Public = () => {
         });
         setBench(newBench);
     });
+    connection.on("StadiumChanged", (message) => {
+        if (message) {
+          message.attachedCards = [];
+        }
+        console.log("Message from SignalR hub: stadium changed", message);
+        setStadium(message);
+    });
 
     // start connection
     connection.start()
@@ -201,6 +209,7 @@ const Public = () => {
             bench={bench}
             active={active}
             discard={discard}
+            stadium={stadium}
             prizes={prizes}
             numberInDeck={numberInDeck}
             rerenderKey={rerenderKey}

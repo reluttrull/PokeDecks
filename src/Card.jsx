@@ -34,6 +34,7 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
     { left: 900, top: 275, position: 5 }, // bench 5
     { left: 1050, top: 465, position: 6 }, // discard
     { left: 1050, top: 310, position: 7 }, // deck
+    { left: 300, top: 85, position: 8 }, // stadium
   ];
   
   function openModal() {
@@ -136,11 +137,7 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
     damageCallback({card:data, change:change});
   }
 
-  function isTreatedAsPokemon() {
-    if (data.category == "Pokemon") return true;
-    if (data.name == "Clefairy Doll") return true;
-    return false;
-  }
+  const isTreatedAsPokemon = data.category == "Pokemon" || data.name == "Clefairy Doll" ? true : false;
 
   useEffect(() => {
     if (!data.attachedCards) return;
