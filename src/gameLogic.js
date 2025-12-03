@@ -149,9 +149,18 @@ export function tightenHandLayoutLogic(hand, setHand, setRerenderKey) {
 
 function shouldAttachAsEnergy(baseCard, cardToAttach) {
   if (cardToAttach.category == "Energy") return true;
-  if (baseCard.name != "Voltorb" && cardToAttach.name == "Electrode" && cardToAttach.attachedCards.length > 0) {
-    return true;
-  }
+  if (baseCard.name != "Voltorb" 
+      && cardToAttach.name == "Electrode" 
+      && cardToAttach.attachedCards.length > 0) return true;
+
+  return false;
+}
+
+function shouldAttachAsTool(baseCard, cardToAttach) {
+  console.log(cardToAttach.trainerType, baseCard.attachedCards);
+  if (cardToAttach.trainerType == "Tool" 
+      && !baseCard.attachedCards.includes(c => c.trainerType == "Tool")) return true;
+
   return false;
 }
 
@@ -197,7 +206,8 @@ export async function attachOrSwapCard(
   }
 
   if (isActive) {
-    if (shouldAttachAsEnergy(active, cardToAttach)) { // attach energy?
+    if (shouldAttachAsEnergy(active, cardToAttach) 
+          || shouldAttachAsTool(active, cardToAttach)) { // attach?
       // handle Electrode Buzzap power
       cardToAttach.attachedCards.forEach(c => apiDiscardCard(guid, c));
       cardToAttach.attachedCards = [];
@@ -219,7 +229,8 @@ export async function attachOrSwapCard(
     return true;
   }
 
-  if (shouldAttachAsEnergy(bench[benchPosition], cardToAttach)) { // attach energy?
+  if (shouldAttachAsEnergy(bench[benchPosition], cardToAttach) 
+        || shouldAttachAsTool(bench[benchPosition], cardToAttach)) { // attach?
     // handle Electrode Buzzap power
     cardToAttach.attachedCards.forEach(c => apiDiscardCard(guid, c));
     cardToAttach.attachedCards = [];
