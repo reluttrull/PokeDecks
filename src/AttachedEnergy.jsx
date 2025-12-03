@@ -10,7 +10,7 @@ const AttachedEnergy = ({cardName, offset, deleteCallback}) => {
   let urlstring = `/pokeclient/${energyType}.png`;
 
   const handleEnergyClick = async () => {
-    if (await confirm({ confirmation: 'Do you really want to delete this energy?' })) {
+    if (await confirm({ confirmation: 'Do you really want to discard this energy?' })) {
       deleteCallback(cardName);
     }
   };

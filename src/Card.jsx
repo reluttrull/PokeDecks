@@ -3,6 +3,7 @@ import { animate, useDrag, useValue, withSpring } from 'react-ui-animate';
 import { FaCircleInfo } from 'react-icons/fa6';
 import Modal from 'react-modal';
 import AttachedEnergy from './AttachedEnergy.jsx';
+import AttachedTool from './AttachedTool.jsx';
 import Damage from './Damage.jsx';
 import SpecialConditions from './SpecialConditions.jsx';
 import './App.css';
@@ -15,6 +16,7 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
   const [translateY, setTranslateY] = useValue(0);
   const [attachedEnergy, setAttachedEnergy] = useState([]);
   const [mockEnergy, setMockEnergy] = useState([]);
+  const [attachedTools, setAttachedTools] = useState([]);
   const [rerenderEnergyKey, setRerenderEnergyKey] = useState(0);
   const [rerenderDmgKey, setRerenderDmgKey] = useState(0);
   let slowMotion = 15;
@@ -146,6 +148,8 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
           .toSorted((a,b) => a.name - b.name));
     setMockEnergy(data.attachedCards
           .filter((attachedCard) => attachedCard.name == "Electrode"));
+    setAttachedTools(data.attachedCards
+          .filter((attachedCard) => attachedCard.trainerType == "Tool"));
     setRerenderEnergyKey((p) => p + 1);
     }, [JSON.stringify(data.attachedCards)]);
 
@@ -174,6 +178,7 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
     <animate.div
       style={{
         position: 'absolute',
+        zIndex: 1050,
         translateX,
         translateY,
       }}
@@ -192,6 +197,10 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
               offset={(attachedEnergy.length * 20) + (index * 40) + 20} deleteCallback={handleEnergyDelete} />
         </div>
       ))}
+      {attachedTools.length > 0 &&
+          attachedTools.map(card => (
+            <AttachedTool key={card.numberInDeck} cardName={card.name} cardImage={card.image} deleteCallback={handleEnergyDelete} />
+          ))}
       {isTreatedAsPokemon && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleSendDmg} />}
       {isTreatedAsPokemon && <SpecialConditions />}
     </animate.div>

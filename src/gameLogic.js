@@ -157,10 +157,8 @@ function shouldAttachAsEnergy(baseCard, cardToAttach) {
 }
 
 function shouldAttachAsTool(baseCard, cardToAttach) {
-  console.log(cardToAttach.trainerType, baseCard.attachedCards);
   if (cardToAttach.trainerType == "Tool" 
-      && !baseCard.attachedCards.includes(c => c.trainerType == "Tool")) return true;
-
+      && !baseCard.attachedCards.some(c => c.trainerType == "Tool")) return true;
   return false;
 }
 
