@@ -6,6 +6,7 @@ import './App.css';
 const AttachedEnergy = ({cardName, offset, deleteCallback}) => {
   const [left, setLeft] = useValue(offset + 20);
   let energyType = cardName.replace(" Energy", "");
+  if (["Mist", "Jet"].includes(energyType)) energyType = "Colorless";
 
   let urlstring = `/pokeclient/${energyType}.png`;
 
