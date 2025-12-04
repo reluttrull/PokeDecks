@@ -326,15 +326,19 @@ ul {
 }
 
 .card-overlay-container {
-  position:relative;
+  left:50%;
+  position:absolute;
 }
 
 .card-overlay {
-  position:absolute;
-  top:50%;
-  left:50%;
-  max-height:700px;
-  max-width:400px;
+  display:inline-flex;
+  max-height:600px;
+  max-width:320px;
+}
+
+.attached-card-overlay {
+  display:inline-flex;
+  width: 80px;
 }
 
 .scrollable-modal {

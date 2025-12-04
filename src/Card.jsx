@@ -219,6 +219,10 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
         contentLabel="Card Overlay"
         onClick={closeModal}
       ><img className="card-overlay" src={hqurlstring} />
+      <div>
+        {data.attachedCards && data.attachedCards.map(c => 
+          <img key={`attached-overlay${c.numberInDeck}`} className="attached-card-overlay" src={`${c.image}/low.png`} />)}
+      </div>
     </Modal>
     </>
   );
