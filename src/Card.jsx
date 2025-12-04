@@ -201,6 +201,15 @@ const Card = ({data, startOffset, positionCallback, isPublic, damageCallback}) =
           attachedTools.map(card => (
             <AttachedTool key={card.numberInDeck} cardName={card.name} cardImage={card.image} deleteCallback={handleEnergyDelete} />
           ))}
+    </animate.div>
+    <animate.div
+      style={{
+        position: 'absolute',
+        zIndex: 950,
+        translateX,
+        translateY,
+      }}
+    >
       {isTreatedAsPokemon && <Damage key={`${data.numberInDeck}-dmg${rerenderDmgKey}`} damageCounters={data.damageCounters} damageCallback={handleSendDmg} />}
       {isTreatedAsPokemon && <SpecialConditions />}
     </animate.div>
