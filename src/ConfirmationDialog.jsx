@@ -3,6 +3,7 @@ import { confirmable, createConfirmation } from 'react-confirm';
 import Modal from 'react-modal';
 
 const ConfirmationDialog = ({ show, proceed, confirmation }) => {
+    Modal.setAppElement("#root");
     const [modalIsOpen, setIsOpen] = useState(true);
 
     return (

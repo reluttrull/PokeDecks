@@ -3,6 +3,7 @@ import { FaClipboard } from 'react-icons/fa6';
 import { IoIosTabletLandscape, IoIosPhoneLandscape } from 'react-icons/io';
 import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
+import confirm from './ConfirmationDialog.jsx';
 import './App.css';
 import { apiGetPublicDeckBriefs, apiGetAllDeckBriefs } from './deckApi.js';
 import { initializeGame, importCustomDeck, initializeGameCustomDeck } from './gameLogic.js';
@@ -21,6 +22,8 @@ const Landing = () => {
     try {
       if (!navigator.clipboard || !navigator.clipboard.readText) {
         setError("Clipboard API is not supported in this browser.");
+        await confirm({ confirmation: `${err}` });
+        setError("");
         return;
       }
 
@@ -30,6 +33,8 @@ const Landing = () => {
     } catch (err) {
       setError("Failed to read clipboard. Permission denied or no text available.");
       console.error(err);
+      await confirm({ confirmation: `${err}` });
+      setError("");
     }
   };
 
@@ -45,6 +50,8 @@ const Landing = () => {
       } catch (err) {
         console.error('Import/init failed', err);
         setError('Failed to import or initialize custom deck');
+        await confirm({ confirmation: `${err}` });
+        setError("");
         return;
       }
     }
