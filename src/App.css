@@ -285,6 +285,13 @@ ul {
   transform: rotate(-30deg);
 }
 
+#active-pokemon-stats {
+  position: absolute; 
+  top: 50px;
+  left: 700px;
+  width: 200px;
+}
+
 .poisoned {
   position: absolute; 
   top: 80px; 

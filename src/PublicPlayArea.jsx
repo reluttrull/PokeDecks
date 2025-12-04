@@ -5,6 +5,7 @@ import StaticCard from './StaticCard.jsx';
 import PrizeCard from './PrizeCard.jsx';
 import Deck from './Deck.jsx';
 import './App.css';
+import ActivePokemonStats from './ActivePokemonStats.jsx';
 
 const PublicPlayArea = ({
   temphand, bench, active, discard, stadium,
@@ -16,8 +17,7 @@ const PublicPlayArea = ({
   return (
     <div>
       {/* Debug info */}
-      <div style={{position: 'absolute', top: '50px', left: '700px', width: '200px'}}>active card = {active && active.name}</div>
-      <div style={{position: 'absolute', top: '100px', left: '700px', width: '200px'}}># cards in bench = {bench?.length}</div>
+      <ActivePokemonStats active={active} />
 
       {/* Active */}
       <div id="user-active" className="card-target">
