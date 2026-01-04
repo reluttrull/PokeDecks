@@ -1,0 +1,534 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  color: #fff;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  user-select: none;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 1em;
+  z-index: 1;
+}
+
+.card-size {
+  width: 120px;
+  height: 165px;
+}
+
+.tiny-card-size {
+  width: 50px;
+  height: 69px;
+}
+
+.tiny-coin-size {
+  width: 50px;
+  width: 50px;
+}
+
+.log-item {
+  color: black;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.deck-info {
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+ul {
+  list-style: none; 
+  padding-left: 0; 
+}
+
+.card-target {
+  position: absolute;
+  z-index: 0;
+  width: 125px;
+  height: 165px;
+}
+
+#user-active {
+  top: 20px;
+  left: 550px;
+  background-color: rgba(200, 10, 10, 0.5);
+}
+
+#user-bench-1 {
+  top: 210px;
+  left: 250px;
+  background-color: rgba(170, 220, 230, 0.5);
+}
+
+#user-bench-2 {
+  top: 210px;
+  left: 400px;
+  background-color: rgba(170, 220, 230, 0.5);
+}
+
+#user-bench-3 {
+  top: 210px;
+  left: 550px;
+  background-color: rgba(170, 220, 230, 0.5);
+}
+
+#user-bench-4 {
+  top: 210px;
+  left: 700px;
+  background-color: rgba(170, 220, 230, 0.5);
+}
+
+#user-bench-5 {
+  top: 210px;
+  left: 850px;
+  background-color: rgba(170, 220, 230, 0.5);
+}
+
+#stadium-area {
+  top: 20px;
+  left: 250px;
+  background-color: rgba(58, 58, 92, 0.5);
+}
+
+#discard-area {
+  top: 400px;
+  left: 1000px;
+  background-color: rgba(120, 120, 120, 0.5);
+}
+
+#discard-select-button {
+  position: absolute;
+  top: 60px;
+  left: 150px;
+  width: 180px;
+}
+
+#deck {
+  position:absolute;
+  top: 210px;
+  left: 1000px;
+  width: 120px;
+  height: 165px;
+}
+
+#hand-area {
+  position:absolute;
+  top: 400px;
+  left: 20px;
+  width: 200px;
+  height: 165px;
+  background-color: rgba(58, 58, 92, 0.5);
+}
+
+#private-hand-area {
+  position:absolute;
+  top: 150px;
+  left: 100px;
+  width: 200px;
+  height: 165px;
+  background-color: rgba(58, 58, 92, 0.5);
+}
+
+.button {
+  position: absolute;
+  color: #fff;
+  background-color: rgba(20, 20, 20, 0.7);
+}
+
+#game-logs-button {
+  top: 330px;
+  left: 300px;
+  width: 180px;
+}
+
+#discard-hand-button {
+  top: 330px;
+  left: 100px;
+  width: 180px;
+  background-color: rgba(200, 10, 10, 0.7);
+}
+
+#copy-url-button {
+  left: 0;
+  width: 100%;
+}
+
+#draw-card-button {
+  position: absolute;
+  top: 50px; 
+  left: 920px;
+  width: 120px;
+}
+
+#flip-coin-button {
+  position: absolute;
+  top: 100px;
+  left: 920px;
+  width: 120px;
+}
+
+#end-game-button {
+  position: absolute;
+  top: 150px; 
+  left: 920px;
+  width: 120px;
+  color: #fff;
+  background-color: rgba(200, 10, 10, 0.7);
+}
+
+#deck-select-button {
+  top: 20px;
+  left: 150px;
+  width: 180px;
+}
+
+#number-in-deck-display {
+  position: absolute;
+  font-weight: bold;
+  font-size:xx-large;
+  color:chartreuse;
+  text-shadow: 3px 3px #333;
+  top: 20px;
+  left: 40px;
+  z-index: 6;
+}
+
+#add-damage-counter-button {
+  position: absolute;
+  top: 0px; 
+  left: 125px;
+}
+
+#damage-display {
+  position: absolute;
+  top: 20px; 
+  left: 130px;
+}
+
+#remove-damage-counter-button {
+  position: absolute;
+  top: 50px; 
+  left: 125px;
+}
+
+#hand-tighten-button {
+  position: absolute;
+  top: 60px;
+  left: -40px;
+}
+
+.icon-button {
+  cursor: pointer;
+}
+
+.info-block {
+  position: absolute;
+  top: -20px;  
+  cursor: pointer;
+}
+
+.energy-icon {
+  position: absolute;
+  top: -20px; 
+}
+
+.energy-icon > img {
+  width: 15px;
+  height: 15px;
+}
+
+.tool-icon {
+  position: absolute;
+  transform: none;
+  top: 30px;
+  left:0px;
+}
+
+.tool-icon img {
+  object-fit: scale-down;
+  object-position: 50% 20%;
+  width: 40px;
+  transform: rotate(-30deg);
+}
+
+#active-pokemon-stats {
+  position: absolute; 
+  top: 20px;
+  left: 700px;
+  width: 200px;
+}
+
+.poisoned {
+  position: absolute; 
+  top: 80px; 
+  left: 125px;
+}
+
+.asleep {
+  position: absolute; 
+  top: 100px; 
+  left: 125px;
+}
+
+.paralyzed {
+  position: absolute; 
+  top: 120px; 
+  left: 125px;
+}
+
+.confused {
+  position: absolute; 
+  top: 140px; 
+  left: 125px;
+}
+
+.active-condition {
+  color: #fff;
+  font-weight:bold;
+}
+
+.inactive-condition {
+  color: #666;
+}
+
+.card-overlay-container {
+  left:50%;
+  position:absolute;
+}
+
+.card-overlay {
+  display:inline-flex;
+  max-height:600px;
+  max-width:320px;
+}
+
+.attached-card-overlay {
+  display:inline-flex;
+  width: 80px;
+}
+
+.scrollable-modal {
+  padding: 20px;
+  max-height: 80vh;
+  min-width: 50%;
+  max-width: 500px;
+  overflow-y: auto;
+}
+
+.scrollable-full-modal {
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+
+@-webkit-keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+.coin {
+	height: 150px;
+	width: 150px;
+	position: relative;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	position: relative;
+	margin: 50px auto;
+}
+.coin img {
+	width: 145px;
+}
+.heads,
+.tails {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	border-radius: 50%;
+}
+.tails {
+	-webkit-transform: rotateX(180deg);
+	transform: rotateX(180deg);
+}
+
+#return-to-hand-zone {
+  position: absolute;
+  top: 400px;
+  left: 250px;
+  width: 720px;
+  height: 165px;
+  background-color: #646cff96;
+}
+
+#move-to-play-zone {
+  position: absolute;
+  text-align: left;
+  padding-top: 20px;
+  padding-left: 50px;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 80px;
+  background-color: #646cff96;
+}
+
+#private-qr {
+  position: absolute;
+  top: 10px;
+  left: 1150px;
+  width: 100px;
+  height:120px;
+  font-size:x-small;
+  word-wrap:break-word;
+  -webkit-user-select: text; /* Safari */
+  -moz-user-select: text; /* Firefox */
+  user-select:text;
+}
+
+.qr {
+  height: 100%;
+  max-width: 100%;
+}
+
+@-webkit-keyframes spin-tails {
+	0% {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+	}
+	100% {
+		-webkit-transform: rotateX(1980deg);
+		transform: rotateX(1980deg);
+	}
+}
+@keyframes spin-tails {
+	0% {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+	}
+	100% {
+		-webkit-transform: rotateX(1980deg);
+		transform: rotateX(1980deg);
+	}
+}
+@-webkit-keyframes spin-heads {
+	0% {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+	}
+	100% {
+		-webkit-transform: rotateX(2160deg);
+		transform: rotateX(2160deg);
+	}
+}
+@keyframes spin-heads {
+	0% {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+	}
+	100% {
+		-webkit-transform: rotateX(2160deg);
+		transform: rotateX(2160deg);
+	}
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
