@@ -104,7 +104,7 @@ const Public = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl(`${process.env.REACT_APP_SERVER_BASE_URL}/notifications`)
+        .withUrl(`${import.meta.env.VITE_SERVER_BASE_URL}/notifications`)
         .withAutomaticReconnect()
         .build();
 

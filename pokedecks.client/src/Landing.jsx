@@ -64,7 +64,7 @@ const Landing = () => {
   }
 
   function getCoinFlip() {
-    fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/game/flipcoin/`)
+    fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/game/flipcoin/`)
     .then(response => response.json())
     .then(data => {
       console.log('flipped coin', data);

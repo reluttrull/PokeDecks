@@ -1,5 +1,5 @@
 // api helper functions
-const BASE = `${process.env.REACT_APP_SERVER_BASE_URL}/game`;
+const BASE = `${import.meta.env.VITE_SERVER_BASE_URL}/game`;
 
 export const apiReturnToDeck = (gameGuid, card) =>
   fetch(`${BASE}/placecardonbottomofdeck/${gameGuid}`, {

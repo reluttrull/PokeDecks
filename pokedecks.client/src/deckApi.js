@@ -1,5 +1,5 @@
 // api helper functions
-const BASE = `${process.env.REACT_APP_SERVER_BASE_URL}/deck`;
+const BASE = `${import.meta.env.VITE_SERVER_BASE_URL}/deck`;
 
 export const apiGetPublicDeckBriefs = (setDeckBriefs) =>
   fetch(`${BASE}/getpublicdeckbriefs`)
