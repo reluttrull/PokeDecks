@@ -10,6 +10,7 @@ import {
   placeCardInSpot,
   attachOrSwapCard,
 } from "./gameLogic.js";
+import { SERVER_BASE_URL } from './api.js';
 import {
   apiReturnToDeck,
   apiDrawPrize,
@@ -104,7 +105,7 @@ const Public = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl(`${import.meta.env.VITE_SERVER_BASE_URL}/notifications`)
+        .withUrl(`${SERVER_BASE_URL}/notifications`)
         .withAutomaticReconnect()
         .build();
 

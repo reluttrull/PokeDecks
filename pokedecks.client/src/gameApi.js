@@ -1,8 +1,10 @@
+import { SERVER_BASE_URL } from './api.js';
+
 // api helper functions
-const BASE = `${import.meta.env.VITE_SERVER_BASE_URL}/game`;
+export const GAME_API_BASE = `${SERVER_BASE_URL}/game`;
 
 export const apiReturnToDeck = (gameGuid, card) =>
-  fetch(`${BASE}/placecardonbottomofdeck/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/placecardonbottomofdeck/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
@@ -10,14 +12,14 @@ export const apiReturnToDeck = (gameGuid, card) =>
 
   
 export const apiMoveToStadium = (gameGuid, card) =>
-  fetch(`${BASE}/movetostadium/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/movetostadium/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   }).catch((error) => console.error("Move card to stadium failed:", error));
 
 export const apiDrawPrize = (gameGuid, setPrizes, prizeNum, callback) =>
-  fetch(`${BASE}/drawcardfromprizes/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/drawcardfromprizes/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
       data.prizeCard.attachedCards = [];
@@ -31,7 +33,7 @@ export const apiDrawPrize = (gameGuid, setPrizes, prizeNum, callback) =>
     });
 
 export const apiDrawTopCard = (gameGuid) =>
-  fetch(`${BASE}/drawcardfromdeck/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/drawcardfromdeck/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
       data.attachedCards = [];
@@ -39,25 +41,25 @@ export const apiDrawTopCard = (gameGuid) =>
     });
 
 export const apiEndGame = (gameGuid, callback) =>
-  fetch(`${BASE}/endgame/${gameGuid}`, { method: "PUT" }).then((response) => {
+    fetch(`${GAME_API_BASE}/endgame/${gameGuid}`, { method: "PUT" }).then((response) => {
     if (response.status == 204) callback({ ended: true });
   });
 
 export const apiFlipCoin = (gameGuid, setCoinResult) =>
-  fetch(`${BASE}/flipcoin/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/flipcoin/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => setCoinResult(data));
 
 export const apiShuffleDeck = (gameGuid) =>
-  fetch(`${BASE}/shuffledeck/${gameGuid}`, { method: "PUT" });
+    fetch(`${GAME_API_BASE}/shuffledeck/${gameGuid}`, { method: "PUT" });
 
 export const apiFetchCardsFromDeck = (gameGuid, setCardsInDeck) =>
-  fetch(`${BASE}/peekatallcardsindeck/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/peekatallcardsindeck/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => setCardsInDeck(data));
 
 export const apiDrawSpecificCard = (gameGuid, card, cardsInDeck, setCardsInDeck) =>
-  fetch(`${BASE}/drawthiscardfromdeck/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/drawthiscardfromdeck/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
@@ -70,7 +72,7 @@ export const apiDrawSpecificCard = (gameGuid, card, cardsInDeck, setCardsInDeck)
   });
   
 export const apiDrawSpecificCardFromDiscard = (gameGuid, card, discard, setDiscard) =>
-  fetch(`${BASE}/drawthiscardfromdiscard/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/drawthiscardfromdiscard/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
@@ -83,42 +85,42 @@ export const apiDrawSpecificCardFromDiscard = (gameGuid, card, discard, setDisca
   });
 
 export const apiDiscardCard = (gameGuid, card) =>
-  fetch(`${BASE}/discardcard/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/discardcard/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   });
 
 export const apiSendToTempHand = (gameGuid, card) =>
-  fetch(`${BASE}/sendtotemphand/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/sendtotemphand/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   });
 
 export const apiSendToHand = (gameGuid, card) =>
-  fetch(`${BASE}/sendtohand/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/sendtohand/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   });
 
 export const apiMoveToActive = (gameGuid, card) =>
-  fetch(`${BASE}/movetoactive/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/movetoactive/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards, damageCounters: card.damageCounters }),
   });
 
 export const apiMoveToBench = (gameGuid, card) =>
-  fetch(`${BASE}/movetobench/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/movetobench/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ mainCard: card, attachedCards: card.attachedCards, damageCounters: card.damageCounters }),
   });
 
 export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
-  fetch(`${BASE}/swapactivewithbench/${gameGuid}`, {
+    fetch(`${GAME_API_BASE}/swapactivewithbench/${gameGuid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify([
@@ -128,14 +130,14 @@ export const apiSwapActiveWithBench = (gameGuid, card1, card2) =>
   });
 
 export const apiAttachCard = (gameGuid, card, attachedToCard) =>
-  fetch(`${BASE}/attachcard/${gameGuid}/${attachedToCard.numberInDeck}`, {
+    fetch(`${GAME_API_BASE}/attachcard/${gameGuid}/${attachedToCard.numberInDeck}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(card),
   });
 
 export const apiGetHand = (gameGuid, setHand) =>
-  fetch(`${BASE}/gethand/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/gethand/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
         const expandedHand = data.map((card) => ({
@@ -147,12 +149,12 @@ export const apiGetHand = (gameGuid, setHand) =>
     });
 
 export const apiFetchValidEvolutions = (pokemonName) =>
-  fetch(`${BASE}/getvalidevolutions/${pokemonName}`)
+    fetch(`${GAME_API_BASE}/getvalidevolutions/${pokemonName}`)
     .then((response) => (response.ok ? response.json() : []))
     .catch(() => []);
 
 export const apiFetchLog = (gameGuid, setLogEntries) =>
-  fetch(`${BASE}/getgamehistory/${gameGuid}`)
+    fetch(`${GAME_API_BASE}/getgamehistory/${gameGuid}`)
     .then((response) => response.json())
     .then((data) => {
       const logEntries = data.logs.map((log) => ({
@@ -164,15 +166,15 @@ export const apiFetchLog = (gameGuid, setLogEntries) =>
 
     
 export const apiDiscardHand = (gameGuid) =>
-  fetch(`${BASE}/discardhand/${gameGuid}`);
+    fetch(`${GAME_API_BASE}/discardhand/${gameGuid}`);
 
 
 export const apiAddDamageCounters = (gameGuid, card, amount) =>
-  fetch(`${BASE}/adddamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
+    fetch(`${GAME_API_BASE}/adddamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
     method: "PUT"
   });
   
 export const apiRemoveDamageCounters = (gameGuid, card, amount) =>
-  fetch(`${BASE}/removedamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
+    fetch(`${GAME_API_BASE}/removedamagecounters/${gameGuid}/${card.numberInDeck}/${amount}`, {
     method: "PUT"
   });

@@ -1,0 +1,1 @@
+export const SERVER_BASE_URL = 'https://pokeserver20251017181703-ace0bbard6a0cfas.canadacentral-01.azurewebsites.net';

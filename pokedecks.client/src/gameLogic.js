@@ -1,3 +1,6 @@
+import { GAME_API_BASE } from './gameApi.js';
+import { DECK_API_BASE } from './deckApi.js';
+
 // logic helper functions
 import { apiFetchValidEvolutions, apiSendToHand, apiDiscardCard,
     apiMoveToActive, apiMoveToBench,
@@ -17,7 +20,7 @@ function allowedToBeInEmptySpot(card) {
 
 export function initializeGame(deckNumber, gameGuid) {
   fetch(
-    `${import.meta.env.VITE_SERVER_BASE_URL}/game/getnewgame/${deckNumber}`
+      `${GAME_API_BASE}/getnewgame/${deckNumber}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -29,7 +32,7 @@ export function initializeGame(deckNumber, gameGuid) {
 
 export function initializeGameCustomDeck(deckGuid, gameGuid) {
   fetch(
-    `${import.meta.env.VITE_SERVER_BASE_URL}/game/getnewgamefromimporteddeck/${deckGuid}`
+    `${GAME_API_BASE}/getnewgamefromimporteddeck/${deckGuid}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -41,7 +44,7 @@ export function initializeGameCustomDeck(deckGuid, gameGuid) {
 
 export async function importCustomDeck(decklist) {
   try {
-    const resp = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/deck/importdeck/`, {
+      const resp = await fetch(`${DECK_API_BASE}/importdeck/`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(decklist),

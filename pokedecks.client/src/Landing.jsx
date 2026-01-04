@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import CoinFlip from './CoinFlip.jsx';
 import confirm from './ConfirmationDialog.jsx';
 import './App.css';
-import { apiGetPublicDeckBriefs, apiGetAllDeckBriefs } from './deckApi.js';
+import { GAME_API_BASE } from './gameApi.js';
+import { apiGetPublicDeckBriefs, apiGetAllDeckBriefs, DECK_API_BASE } from './deckApi.js';
 import { initializeGame, importCustomDeck, initializeGameCustomDeck } from './gameLogic.js';
 
 const Landing = () => {
@@ -64,7 +65,7 @@ const Landing = () => {
   }
 
   function getCoinFlip() {
-    fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/game/flipcoin/`)
+    fetch(`${GAME_API_BASE}/flipcoin/`)
     .then(response => response.json())
     .then(data => {
       console.log('flipped coin', data);

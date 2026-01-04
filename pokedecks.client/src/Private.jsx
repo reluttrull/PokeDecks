@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from "react-modal";
 import { useParams, useNavigate } from 'react-router-dom';
 import * as signalR from "@microsoft/signalr";
+import { SERVER_BASE_URL } from './api.js';
 import { tightenHandLayoutLogic } from "./gameLogic.js";
 import {
   apiGetHand, apiSendToTempHand, apiFetchLog, apiDiscardHand
@@ -45,7 +46,7 @@ const Private = () => {
     if (!gameGuid) return;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl(`${import.meta.env.VITE_SERVER_BASE_URL}/notifications`)
+        .withUrl(`${SERVER_BASE_URL}/notifications`)
         .withAutomaticReconnect()
         .build();
 
