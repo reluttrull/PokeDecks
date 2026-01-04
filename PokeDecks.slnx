@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="PokeDecks.Client/pokedecks.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="PokeDecks.Server/PokeDecks.Server.csproj" />
+</Solution>
