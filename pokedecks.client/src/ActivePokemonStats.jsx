@@ -8,12 +8,12 @@ const ActivePokemonStats = ({ active }) => {
         <div>{`${active.hp - (active.damageCounters * 10)}/${active.hp} HP`}</div>
         <ul>Weakness: {active.weaknesses && active.weaknesses.map(w => 
             <li>
-                <img src={`/pokedecks/${w.type}.png`} style={{height: '15px', width: '15px'}} /> {w.value}
+                <img src={`/PokeDecks/${w.type}.png`} style={{height: '15px', width: '15px'}} /> {w.value}
             </li>)}
         </ul>
         <ul>Resistance: {active.resistances && active.resistances.map(r => 
             <li>
-                <img src={`/pokedecks/${r.type}.png`} style={{height: '15px', width: '15px'}} /> {r.value}
+                <img src={`/PokeDecks/${r.type}.png`} style={{height: '15px', width: '15px'}} /> {r.value}
             </li>)}
         </ul>
     </div>

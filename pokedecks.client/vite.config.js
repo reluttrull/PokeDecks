@@ -8,6 +8,6 @@ export default defineConfig(({ mode }) => {
       'process.env.REACT_APP_SERVER_BASE_URL': JSON.stringify(env.REACT_APP_SERVER_BASE_URL),
     },
     plugins: [react()],
-  base: '/pokedecks/',
+  base: '/PokeDecks/',
   };
 });

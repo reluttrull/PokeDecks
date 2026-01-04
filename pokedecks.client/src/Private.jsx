@@ -96,8 +96,8 @@ const Private = () => {
                   key={`log-${log.timestamp}-${card.numberInDeck}`}
                   src={`${card.image}/low.webp`} className="tiny-card-size" />
               ))}
-              {log.eventType == 504 && <img src="/pokedecks/coinHeads.png" className="tiny-coin-size" />}
-              {log.eventType == 505 && <img src="/pokedecks/coinTails.png" className="tiny-coin-size" />}
+              {log.eventType == 504 && <img src="/PokeDecks/coinHeads.png" className="tiny-coin-size" />}
+              {log.eventType == 505 && <img src="/PokeDecks/coinTails.png" className="tiny-coin-size" />}
             </div>
             <hr />
           </div>
