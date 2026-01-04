@@ -23,13 +23,13 @@ const Deck = ({displayNum, shuffleCallback, selectCallback}) => {
     <div className="card-target" id="deck">
         <div className={isAnimated ? "card-list is-animated" : "card-list"}>
             <div className="card-list__item" data-card="0">
-                <img src="/pokeclient/cardback.png" className="card-size" />
+                <img src="/pokedecks/cardback.png" className="card-size" />
             </div>
             <div className="card-list__item" data-card="1">
-                <img src="/pokeclient/cardback.png" className="card-size" />
+                <img src="/pokedecks/cardback.png" className="card-size" />
             </div>
             <div className="card-list__item" data-card="2">
-                <img src="/pokeclient/cardback.png" className="card-size" />
+                <img src="/pokedecks/cardback.png" className="card-size" />
             </div>
         </div>
         <button id="deck-select-button" className="button" onClick={handleSelect}>Select from deck</button>

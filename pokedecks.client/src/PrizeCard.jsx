@@ -18,7 +18,7 @@ const PrizeCard = ({prizeNum}) => {
         top: offsetY,
         width: 95,
         height: 140,
-        backgroundImage : `url('/pokeclient/cardback.png')`,
+        backgroundImage : `url('/pokedecks/cardback.png')`,
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',

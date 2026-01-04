@@ -19,10 +19,10 @@ const CoinFlip = ({isHeads}) => {
     <>
     <animate.div className="coin" id="coin" style={{ animation }}>
         <div className="heads">
-            <img src="/pokeclient/coinHeads.png"/>
+            <img src="/pokedecks/coinHeads.png"/>
         </div>
         <div className="tails">
-            <img src="/pokeclient/coinTails.png"/>
+            <img src="/pokedecks/coinTails.png"/>
         </div>
     </animate.div>
     </>

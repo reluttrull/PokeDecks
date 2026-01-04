@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/static.yml" />
+  </Folder>
   <Project Path="PokeDecks.Client/pokedecks.client.esproj">
     <Build />
     <Deploy />

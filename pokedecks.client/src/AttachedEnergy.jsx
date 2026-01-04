@@ -8,7 +8,7 @@ const AttachedEnergy = ({cardName, offset, deleteCallback}) => {
   let energyType = cardName.replace(" Energy", "");
   if (["Mist", "Jet"].includes(energyType)) energyType = "Colorless";
 
-  let urlstring = `/pokeclient/${energyType}.png`;
+  let urlstring = `/pokedecks/${energyType}.png`;
 
   const handleEnergyClick = async () => {
     if (await confirm({ confirmation: 'Do you really want to discard this energy?' })) {
