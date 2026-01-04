@@ -1,0 +1,242 @@
+@PokeServer_HostAddress = http://localhost:5190
+
+
+@DeckId=3
+GET {{PokeServer_HostAddress}}/game/getnewgame/{{DeckId}}
+
+
+###
+@Guid=72875a02-aa42-443e-bb07-274fd551e15b
+GET {{PokeServer_HostAddress}}/game/checkgameactive/{{guid}}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/endgame/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/getactive/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/getbench/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/getdiscard/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/gethand/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/gettemphand/{{guid}}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/movetostadium/{{guid}}
+Content-Type: application/json
+
+{
+  "hp": 50,
+  "types": [
+    "Colorless"
+  ],
+  "evolveFrom": "",
+  "stage": "Basic",
+  "abilities": [],
+  "attacks": [
+    {
+      "cost": [
+        "Colorless"
+      ],
+      "name": "Fury Attack",
+      "effect": "Flip 2 coins. This attack does 10 damage times the number of heads.",
+      "damage": "10x"
+    }
+  ],
+  "weaknesses": [
+    {
+      "type": "Lightning",
+      "value": "×2"
+    }
+  ],
+  "retreatCost": 0,
+  "numberInDeck": "89c2d4dc-d9bb-4326-a506-35e798fa8956",
+  "category": "Pokemon",
+  "id": "base1-48",
+  "image": "https://assets.tcgdex.net/en/base/base1/48",
+  "name": "Doduo",
+  "description": ""
+}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/sendtotemphand/{{guid}}
+Content-Type: application/json
+
+{
+  "hp": 50,
+  "types": [
+    "Colorless"
+  ],
+  "evolveFrom": "",
+  "stage": "Basic",
+  "abilities": [],
+  "attacks": [
+    {
+      "cost": [
+        "Colorless"
+      ],
+      "name": "Fury Attack",
+      "effect": "Flip 2 coins. This attack does 10 damage times the number of heads.",
+      "damage": "10x"
+    }
+  ],
+  "weaknesses": [
+    {
+      "type": "Lightning",
+      "value": "×2"
+    }
+  ],
+  "retreatCost": 0,
+  "numberInDeck": "89c2d4dc-d9bb-4326-a506-35e798fa8956",
+  "category": "Pokemon",
+  "id": "base1-48",
+  "image": "https://assets.tcgdex.net/en/base/base1/48",
+  "name": "Doduo",
+  "description": ""
+}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/discardcard/{{guid}}
+Content-Type: application/json
+
+{
+  "hp": 50,
+  "types": [
+    "Colorless"
+  ],
+  "evolveFrom": "",
+  "stage": "Basic",
+  "abilities": [],
+  "attacks": [
+    {
+      "cost": [
+        "Colorless"
+      ],
+      "name": "Fury Attack",
+      "effect": "Flip 2 coins. This attack does 10 damage times the number of heads.",
+      "damage": "10x"
+    }
+  ],
+  "weaknesses": [
+    {
+      "type": "Lightning",
+      "value": "×2"
+    }
+  ],
+  "retreatCost": 0,
+  "numberInDeck": "89c2d4dc-d9bb-4326-a506-35e798fa8956",
+  "category": "Pokemon",
+  "id": "base1-48",
+  "image": "https://assets.tcgdex.net/en/base/base1/48",
+  "name": "Doduo",
+  "description": ""
+}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/discardhand/{{guid}}
+
+###
+
+@toCardId=53a8f61d-a1b1-4011-9499-68bf4062792f
+@amount=3
+PUT {{PokeServer_HostAddress}}/game/adddamagecounters/{{guid}}/{{toCardId}}/{{amount}}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/removedamagecounters/{{guid}}/{{toCardId}}/{{amount}}
+
+###
+
+PUT {{PokeServer_HostAddress}}/game/movetoactive/{{guid}}
+Content-Type: application/json
+
+{
+  "mainCard": {
+      "$type": "PokemonCard",
+      "hp": 40,
+      "types": [
+        "Lightning"
+      ],
+      "evolveFrom": "",
+      "stage": "Basic",
+      "abilities": [],
+      "attacks": [
+        {
+          "cost": [
+            "Colorless"
+          ],
+          "name": "Tackle",
+          "effect": "",
+          "damage": "10"
+        }
+      ],
+      "weaknesses": [
+        {
+          "type": "Fighting",
+          "value": "×2"
+        }
+      ],
+      "retreatCost": 0,
+      "numberInDeck": "53a8f61d-a1b1-4011-9499-68bf4062792f",
+      "category": "Pokemon",
+      "id": "base1-67",
+      "image": "https://assets.tcgdex.net/en/base/base1/67",
+      "name": "Voltorb",
+      "description": ""
+    },
+    "attachedCards": [],
+    "damageCounters": 0
+}
+
+###
+
+GET {{PokeServer_HostAddress}}/game/getgamehistory/{{guid}}
+
+###
+
+GET {{PokeServer_HostAddress}}/deck/getalldeckbriefs
+
+###
+
+GET {{PokeServer_HostAddress}}/deck/getpublicdeckbriefs
+
+###
+
+@x=0
+GET {{PokeServer_HostAddress}}/game/flipxcoins/{{guid}}/{{x}}
+
+###
+
+PUT {{PokeServer_HostAddress}}/deck/importdeck
+Content-Type: application/json
+
+"Pokémon: 23\n2 Rowlet SFA 3\n4 Wattrel PAL 80\n2 Tatsugiri TWM 131\n4 Murkrow PAL 131\n2 Iron Bundle PAR 56\n1 Squawkabilly ex PAF 75\n4 Flamigo PAL 170\n4 Dartrix SFA 4\nTrainer: 29\n4 Ultra Ball MEG 131\n1 Earthen Vessel PRE 106\n1 Brilliant Blender SSP 164\n1 Buddy-Buddy Poffin PRE 101\n1 Counter Catcher PAR 160\n1 Iono PAF 80\n1 Gravity Mountain SSP 177\n1 Dusk Ball SSP 175\n1 Great Ball PAL 183\n1 Brave Bangle WHT 80\n2 Night Stretcher SFA 61\n1 Super Rod PAL 188\n2 Air Balloon BLK 79\n1 Pal Pad SVI 182\n2 Nest Ball PAF 84\n4 Professor's Research PAF 87\n2 Carmine PRE 103\n2 Boss's Orders MEG 114\nEnergy: 8\n2 Mist Energy TEF 161\n1 Jet Energy PAL 190\n5 Darkness Energy"
+
+###
+
+
+@deckGuid=62761204-2f60-49c0-a6d2-a831f5cf88b4
+GET {{PokeServer_HostAddress}}/game/getnewgamefromimporteddeck/{{deckGuid}}
+
+###
+
+
+GET {{PokeServer_HostAddress}}/game/drawcardfromdeck/{{guid}}
+
+###
