@@ -1,7 +1,8 @@
 using DotNetEnv;
+using PokeDecks.Server.Extensions;
 using PokeServer;
 
-Env.Load(); // load environment variables from .env file
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,12 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowCredentials());
 });
+
+builder.Services.AddRedis();
+builder.Services.AddScoped<ApiHelper>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddMemoryCache(); // inject in-memory caching service
+builder.Services.AddMemoryCache();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

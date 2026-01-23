@@ -18,28 +18,37 @@ function allowedToBeInEmptySpot(card) {
   return false;
 }
 
-export function initializeGame(deckNumber, gameGuid) {
-  fetch(
-      `${GAME_API_BASE}/getnewgame/${deckNumber}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      if (!data) throw "Game data empty!";
-      if (data.gameGuid) gameGuid.current = data.gameGuid;
-    })
-    .catch((err) => console.error("Error fetching game start:", err));
+export async function initializeGame(deckNumber, gameGuid) {
+  const response = await fetch(
+    `${GAME_API_BASE}/getnewgame/${deckNumber}`
+  );
+
+  const data = await response.json();
+  console.log('got back game start data', data);
+
+  if (!data) console.error("Error: Game data empty!");
+
+  if (data.gameGuid) {
+    gameGuid.current = data.gameGuid;
+  }
+
+  return data;
 }
 
-export function initializeGameCustomDeck(deckGuid, gameGuid) {
-  fetch(
+export async function initializeGameCustomDeck(deckGuid, gameGuid) {
+  const response = await fetch(
     `${GAME_API_BASE}/getnewgamefromimporteddeck/${deckGuid}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      if (!data) throw "Game data empty!";
-      if (data.gameGuid) gameGuid.current = data.gameGuid;
-    })
-    .catch((err) => console.error("Error fetching game start:", err));
+  );
+
+  const data = await response.json();
+
+  if (!data) console.error("Error: Game data empty!");
+
+  if (data.gameGuid) {
+    gameGuid.current = data.gameGuid;
+  }
+
+  return data;
 }
 
 export async function importCustomDeck(decklist) {
