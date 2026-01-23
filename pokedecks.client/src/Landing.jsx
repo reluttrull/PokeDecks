@@ -42,7 +42,7 @@ const Landing = () => {
   async function startGame() {
     getCoinFlip();
     if (!useCustomDeck) {
-      initializeGame(deckNum, gameGuid);
+      await initializeGame(deckNum, gameGuid);
     } else {
       try {
         const deckGuid = await importCustomDeck(clipboardText); // returns deck guid string
@@ -56,12 +56,9 @@ const Landing = () => {
         return;
       }
     }
-    setTimeout(() => {
-      setCoinResult(null);
-      let url = '/public/';
-      url += gameGuid.current;
-      navigate(url);
-    }, 5000);
+    setCoinResult(null);
+    let url = `/public/${gameGuid.current}`;
+    navigate(url);
   }
 
   function getCoinFlip() {

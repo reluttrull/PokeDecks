@@ -13,11 +13,13 @@ namespace PokeServer.Controllers
     {
         private readonly ILogger<DeckController> _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly ApiHelper _api;
 
-        public DeckController(ILogger<DeckController> logger, IMemoryCache memoryCache)
+        public DeckController(ILogger<DeckController> logger, IMemoryCache memoryCache, ApiHelper api)
         {
             _logger = logger;
             _memoryCache = memoryCache;
+            _api = api;
         }
 
         #region deck briefs
@@ -83,7 +85,7 @@ namespace PokeServer.Controllers
             bool success = TranslateCardIds(ref cardIds);
             if (!success) return BadRequest("Problem parsing one or more cards in custom decklist. Please check decklist format and try again.");
             // gather card data from Redis/TCGdex
-            List<Card> populatedCards = await ApiHelper.PopulateCardList(cardIds);
+            List<Card> populatedCards = await _api.PopulateCardList(cardIds);
             // perform validation
             if (populatedCards.Count != 60) return BadRequest("Deck must contain exactly 60 cards.");
             foreach (var group in populatedCards.GroupBy(c => c.Name))

@@ -10,32 +10,36 @@ namespace PokeServer
 {
     public class ApiHelper
     {
-        public static async Task<List<Card>> PopulateCardList(List<string> cardIds)
+        private readonly IConnectionMultiplexer _redis;
+        public ApiHelper(IConnectionMultiplexer redis)
         {
-            string connectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
-            var redis = ConnectionMultiplexer.Connect(connectionString);
-            IDatabase db = redis.GetDatabase();
+            _redis = redis;
+        }
+        public async Task<List<Card>> PopulateCardList(List<string> cardIds)
+        {
+            bool useCache = _redis.IsConnected;
+            var db = useCache ? _redis.GetDatabase() : null;
 
             List<Card> cards = new List<Card>();
             for (int i = 0; i < cardIds.Count; i++)
             {
-                string cardJson = "";
+                string cardJson = string.Empty;
 
-                if (db.KeyExists(cardIds[i])) // if we already have cached card
+                if (db?.KeyExists(cardIds[i]) ?? false) // if connected to Redis and we already have cached card
                 {
                     cardJson = db.StringGet(cardIds[i]);
                 }
                 else // if we do need to call api
                 {
                     cardJson = await TryGetCardFromAPI(cardIds[i]);
-                    db.StringSet(cardIds[i], cardJson);
+                    db?.StringSet(cardIds[i], cardJson);
                 }
                 // deserialize whatever we got
                 var options = new System.Text.Json.JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 };
-                var root = JsonNode.Parse(cardJson)!;
+                var root = JsonNode.Parse(cardJson??"")!;
                 var jsonCategory = root["category"]?.GetValue<string>();
                 Enums.CardCategory category = (Enums.CardCategory)Enum.Parse(typeof(Enums.CardCategory), jsonCategory);
                 switch (category)
@@ -54,7 +58,7 @@ namespace PokeServer
                                     {
                                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                                     };
-                                    db.StringSet(cardIds[i], System.Text.Json.JsonSerializer.Serialize(pCard, serializeOptions));
+                                    db?.StringSet(cardIds[i], System.Text.Json.JsonSerializer.Serialize(pCard, serializeOptions));
                                 }
                             }
                             cards.Add(pCard);
@@ -83,10 +87,9 @@ namespace PokeServer
                         break;
                 }
             }
-            redis.Close();
             return cards;
         }
-        private static async Task<string> TryGetCardFromAPI(string cardId)
+        private async Task<string> TryGetCardFromAPI(string cardId)
         {
             HttpResponseMessage response = await new HttpClient().GetAsync($"https://api.tcgdex.net/v2/en/cards/{cardId}");
             if (!response.IsSuccessStatusCode)
@@ -100,7 +103,7 @@ namespace PokeServer
             return await response.Content.ReadAsStringAsync();
         }
 
-        private static async Task<PokemonCard> TryPopulateMissingEvolutionData(PokemonCard pCard, System.Text.Json.JsonSerializerOptions options)
+        private async Task<PokemonCard> TryPopulateMissingEvolutionData(PokemonCard pCard, System.Text.Json.JsonSerializerOptions options)
         {
             string simpleName = pCard.Name
                 .TrimEnding(" ex")
@@ -125,7 +128,7 @@ namespace PokeServer
             return pCard;
         }
 
-        public static async Task<List<string>> GetValidEvolutionNames(string pokemonName)
+        public async Task<List<string>> GetValidEvolutionNames(string pokemonName)
         {
             HttpResponseMessage response = await new HttpClient().GetAsync($"http://api.tcgdex.net/v2/en/cards?evolveFrom={pokemonName}");
             if (!response.IsSuccessStatusCode) throw new HttpRequestException("failed to retrieve evolution data from TCGDex API");

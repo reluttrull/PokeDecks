@@ -14,13 +14,16 @@ namespace PokeServer.Controllers
         private readonly ILogger<GameController> _logger;
         private readonly IMemoryCache _memoryCache;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly ApiHelper _api;
         private int memoryCacheTimeoutHours = 3;
 
-        public GameController(ILogger<GameController> logger, IMemoryCache memoryCache, IHubContext<NotificationHub> hubContext)
+        public GameController(ILogger<GameController> logger, IMemoryCache memoryCache, 
+            IHubContext<NotificationHub> hubContext, ApiHelper api)
         {
             _logger = logger;
             _memoryCache = memoryCache;
             _hubContext = hubContext;
+            _api = api;
         }
 
         #region game management
@@ -37,7 +40,7 @@ namespace PokeServer.Controllers
             if (game.Deck.Cards.Count == 0)
             {
                 _logger.LogInformation("Populating card list for deck {DeckId}", DeckId);
-                game.Deck.Cards = await ApiHelper.PopulateCardList(game.Deck.CardIds);
+                game.Deck.Cards = await _api.PopulateCardList(game.Deck.CardIds);
                 _logger.LogInformation("Populated {CardCount} cards for deck {DeckId}", game.Deck.Cards.Count, DeckId);
             }
 
@@ -298,7 +301,7 @@ namespace PokeServer.Controllers
         [Route("getvalidevolutions/{pokemonName}")]
         public async Task<List<string>> GetValidEvolutions(string pokemonName)
         {
-            return await ApiHelper.GetValidEvolutionNames(pokemonName);
+            return await _api.GetValidEvolutionNames(pokemonName);
         }
 
         [HttpGet]
