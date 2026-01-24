@@ -1,10 +1,32 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.AspNetCore.RateLimiting;
+using StackExchange.Redis;
 using System.Runtime.CompilerServices;
+using System.Threading.RateLimiting;
 
 namespace PokeDecks.Server.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection AddRateLimiting(this IServiceCollection services)
+        {
+            services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("fixed", context =>
+                {
+                    // limit 20 new game requests per IP per hour
+                    var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+                    return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 20,
+                        Window = TimeSpan.FromHours(1),
+                        QueueLimit = 0
+                    });
+                });
+            });
+            return services;
+        }
         public static IServiceCollection AddRedis(this IServiceCollection services)
         {
             services.AddSingleton<IConnectionMultiplexer>(sp =>

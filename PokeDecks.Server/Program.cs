@@ -20,6 +20,7 @@ builder.Services.AddRedis();
 builder.Services.AddScoped<ApiHelper>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddHealthChecks();
 
@@ -30,6 +31,7 @@ app.MapHealthChecks("/health");
 
 app.UseCors("AllowClient");
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

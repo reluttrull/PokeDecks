@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Caching.Memory;
 using PokeServer.DeckData;
 using PokeServer.Model;
@@ -76,6 +77,7 @@ namespace PokeServer.Controllers
 
         #region deck import
         [HttpPut]
+        [EnableRateLimiting("fixed")]
         [Route("importdeck")]
         public async Task<IActionResult> ImportDeck([FromBody] string decklist)
         {

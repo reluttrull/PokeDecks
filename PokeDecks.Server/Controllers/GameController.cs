@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders.Physical;
@@ -29,6 +30,7 @@ namespace PokeServer.Controllers
         #region game management
 
         [HttpGet]
+        [EnableRateLimiting("fixed")]
         [Route("getnewgame/{deckId}")]
         public async Task<IActionResult> GetNewGame(int DeckId)
         {
@@ -76,6 +78,7 @@ namespace PokeServer.Controllers
         }
 
         [HttpGet]
+        [EnableRateLimiting("fixed")]
         [Route("getnewgamefromimporteddeck/{deckGuid}")]
         public async Task<IActionResult> GetNewGameFromImportedDeck(string deckGuid)
         {
