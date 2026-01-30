@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using PokeServer.Extensions;
+﻿using PokeServer.Extensions;
 using PokeServer.Model;
 using StackExchange.Redis;
 using System.Text.Json;
@@ -20,6 +18,7 @@ namespace PokeServer
             bool useCache = _redis.IsConnected;
             var db = useCache ? _redis.GetDatabase() : null;
 
+            // todo: handle nulls better
             List<Card> cards = new List<Card>();
             for (int i = 0; i < cardIds.Count; i++)
             {
@@ -115,7 +114,7 @@ namespace PokeServer
             if (searchResponse != null && searchResponse.IsSuccessStatusCode)
             {
                 string relatedCardsJson = await searchResponse.Content.ReadAsStringAsync();
-                List<PokemonCard> relatedCards = JsonConvert.DeserializeObject<List<PokemonCard>>(relatedCardsJson);
+                List<PokemonCard> relatedCards = System.Text.Json.JsonSerializer.Deserialize<List<PokemonCard>>(relatedCardsJson) ?? [];
                 oldestRelatedCard = relatedCards.First();
             }
             if (oldestRelatedCard.Id != string.Empty)
